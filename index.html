@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist & Live Tagging Tool - Analyse Sportive</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00a8ff;
+            --primary-dark: #0081cc;
+            --bg-dark: #1a1a2e;
+            --bg-darker: #0f0f1e;
+            --surface: #16213e;
+            --surface-light: #1d2d4d;
+            --text-primary: #ecf0f1;
+            --text-secondary: #bdc3c7;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 168, 255, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .header .subtitle {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        /* Configuration Zone */
+        .config-zone {
+            background: var(--surface);
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--warning);
+        }
+
+        .config-zone h3 {
+            margin-bottom: 15px;
+            color: var(--warning);
+        }
+
+        .config-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .config-input-group input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            background: var(--bg-dark);
+            border: 1px solid var(--primary);
+            border-radius: 5px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .config-input-group input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 168, 255, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #27ae60;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d68910;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            background: var(--surface);
+            margin: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            background: var(--surface-light);
+            color: var(--text-secondary);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 168, 255, 0.4);
+        }
+
+        .tab-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section */
+        .section {
+            background: var(--surface);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .section h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .section h3 {
+            color: var(--text-primary);
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-dark);
+            border: 1px solid var(--surface-light);
+            border-radius: 5px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Chronomètre */
+        .timer-display {
+            font-size: 60px;
+            font-weight: bold;
+            text-align: center;
+            color: var(--primary);
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            background: var(--bg-darker);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .action-btn.but {
+            background: var(--success);
+        }
+
+        .action-btn.but:hover {
+            background: #27ae60;
+        }
+
+        .action-btn.faute {
+            background: var(--danger);
+        }
+
+        .action-btn.faute:hover {
+            background: #c0392b;
+        }
+
+        .action-btn.changement {
+            background: var(--info);
+        }
+
+        .action-btn.changement:hover {
+            background: #2980b9;
+        }
+
+        .action-btn.action-cle {
+            background: var(--primary);
+        }
+
+        .action-btn.action-cle:hover {
+            background: var(--primary-dark);
+        }
+
+        .action-btn.erreur {
+            background: var(--warning);
+        }
+
+        .action-btn.erreur:hover {
+            background: #d68910;
+        }
+
+        /* Journal d'actions */
+        .actions-log {
+            background: var(--bg-darker);
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .action-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--surface-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-item:last-child {
+            border-bottom: none;
+        }
+
+        .action-item-time {
+            color: var(--primary);
+            font-weight: bold;
+            min-width: 60px;
+        }
+
+        .action-item-type {
+            background: var(--surface-light);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .action-item-desc {
+            flex: 1;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .action-item-delete {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .action-item-delete:hover {
+            background: #c0392b;
+        }
+
+        .action-item-dossard {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 14px;
+            background: rgba(0, 168, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
+
+        .action-item-substitution {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .action-item-substitution span {
+            font-size: 13px;
+        }
+
+        /* Statistiques */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-darker);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border-top: 3px solid var(--primary);
+        }
+
+        .stat-card-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .stat-card-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Charts */
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .chart-wrapper {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            position: relative;
+            height: 400px;
+        }
+
+        .chart-wrapper h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .chart-wrapper canvas {
+            max-height: 350px;
+        }
+
+        /* Dropdown notification */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 15px 20px;
+            background: var(--success);
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-badge.active {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-badge.ended {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+
+            .timer-display {
+                font-size: 40px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .tabs {
+                margin: 20px 10px;
+            }
+
+            .tab-content {
+                padding: 20px 10px;
+            }
+
+            .section {
+                margin: 10px 0;
+                padding: 15px;
+            }
+
+            .action-buttons {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>⚽ CHECKLIST & LIVE TAGGING TOOL</h1>
+        <div class="subtitle">Analyse Sportive en Direct - Intégration Google Sheets</div>
+    </div>
+
+    <!-- Configuration -->
+    <div class="config-zone">
+        <h3>⚙️ Configuration - Web App Google Apps Script</h3>
+        <div class="config-input-group">
+            <input type="text" id="webAppUrl" placeholder="Collez l'URL de votre Web App Google Apps Script (https://script.google.com/...)" />
+            <button class="btn btn-primary" onclick="saveWebAppUrl()">💾 Sauvegarder</button>
+            <span id="configStatus" style="color: var(--text-secondary); font-size: 12px;">Non configuré</span>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('avant')">📋 Avant Match</button>
+        <button class="tab-btn" onclick="switchTab('pendant')">⏱️ Pendant Match</button>
+        <button class="tab-btn" onclick="switchTab('apres')">📊 Après Match</button>
+        <button class="tab-btn" onclick="switchTab('stats')">📈 Statistiques</button>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" style="display: none;"></div>
+
+    <!-- TAB 1: AVANT MATCH -->
+    <div id="avant" class="tab-content active">
+        <div style="margin: 0 20px;">
+            <div class="section">
+                <h2>📋 Checklist Avant Match</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">Préparation du match et vérification des informations</p>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Identifiant Match</label>
+                        <input type="text" id="matchId" placeholder="ex: MATCH_001" />
+                    </div>
+                    <div class="form-group">
+                        <label>Date du Match</label>
+                        <input type="date" id="matchDate" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Équipe 1</label>
+                        <input type="text" id="team1" placeholder="ex: FC Lyon" />
+                    </div>
+                    <div class="form-group">
+                        <label>Équipe 2</label>
+                        <input type="text" id="team2" placeholder="ex: AS Saint-Étienne" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Compositions d'Équipes (Lien Feuille)</label>
+                    <input type="text" id="compositionLink" placeholder="https://docs.google.com/..." />
+                </div>
+
+                <div class="form-group">
+                    <label>Notes / Observations</label>
+                    <textarea id="beforeMatchNotes"></textarea>
+                </div>
+
+                <button class="btn btn-success" onclick="startMatch()">✅ Créer & Démarrer le Match</button>
+            </div>
+
+            <div class="section">
+                <h3>✓ Checklist Préparation</h3>
+                <div style="display: grid; gap: 10px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-secondary);">
+                        <input type="checkbox" id="check1" /> Compositions vérifiées
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-secondary);">
+                        <input type="checkbox" id="check2" /> Arbitres confirmés
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-secondary);">
+                        <input type="checkbox" id="check3" /> Conditions météo vérifiées
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-secondary);">
+                        <input type="checkbox" id="check4" /> Appareils de streaming prêts
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-secondary);">
+                        <input type="checkbox" id="check5" /> Feuille Google connectée
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: PENDANT MATCH -->
+    <div id="pendant" class="tab-content">
+        <div style="margin: 0 20px;">
+            <div class="section">
+                <h2>⏱️ Saisie Temps Réel</h2>
+                <div style="color: var(--text-secondary); margin-bottom: 20px;" id="matchInfo">Aucun match en cours</div>
+
+                <div class="timer-display" id="timerDisplay">00:00</div>
+
+                <div class="timer-controls">
+                    <button class="btn btn-primary" onclick="startTimer()">▶ Démarrer</button>
+                    <button class="btn btn-warning" onclick="pauseTimer()">⏸ Pause</button>
+                    <button class="btn btn-danger" onclick="resetTimer()">🔄 Réinitialiser</button>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Équipe</label>
+                        <select id="actionTeam">
+                            <option value="">-- Sélectionner --</option>
+                            <option value="Équipe 1">Équipe 1</option>
+                            <option value="Équipe 2">Équipe 2</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Numéro de Dossard (Optionnel)</label>
+                        <input type="number" id="actionPlayer" placeholder="Ex: 7, 10, 23" min="0" max="99" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Description / Contexte</label>
+                    <textarea id="actionDescription" placeholder="Détails additionnels..."></textarea>
+                </div>
+
+                <!-- Section spéciale CHANGEMENT -->
+                <div id="substitutionSection" style="display: none; background: var(--surface-light); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 2px solid var(--info);">
+                    <h3 style="color: var(--info); margin-bottom: 15px;">🔄 Détails du Changement</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label style="color: var(--danger);">Dossard qui SORT</label>
+                            <input type="number" id="playerOut" placeholder="Ex: 7" min="0" max="99" />
+                        </div>
+                        <div class="form-group">
+                            <label style="color: var(--success);">Dossard qui ENTRE</label>
+                            <input type="number" id="playerIn" placeholder="Ex: 12" min="0" max="99" />
+                        </div>
+                    </div>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 10px;">💡 Remplissez ces deux champs avant de cliquer sur CHANGEMENT</p>
+                </div>
+
+                <h3>🎯 Actions Rapides (1-Clic)</h3>
+                <div class="action-buttons">
+                    <button class="action-btn but" onclick="quickAction('But')">⚽ BUT</button>
+                    <button class="action-btn faute" onclick="quickAction('Faute')">🛑 FAUTE</button>
+                    <button class="action-btn changement" onclick="toggleSubstitutionForm()">🔄 CHANGEMENT</button>
+                    <button class="action-btn action-cle" onclick="quickAction('Action Clé')">💡 ACTION CLÉ</button>
+                    <button class="action-btn erreur" onclick="quickAction('Erreur')">❌ ERREUR</button>
+                </div>
+
+                <h3 style="margin-top: 30px;">📜 Journal d'Actions</h3>
+                <div class="actions-log" id="actionsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: APRÈS MATCH -->
+    <div id="apres" class="tab-content">
+        <div style="margin: 0 20px;">
+            <div class="section">
+                <h2>📊 Bilan Après Match</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Équipe 1 - Score Final</label>
+                        <input type="number" id="finalScore1" value="0" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label>Équipe 2 - Score Final</label>
+                        <input type="number" id="finalScore2" value="0" min="0" />
+                    </div>
+                </div>
+
+                <h3>📈 Résumé Statistiques</h3>
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label>Total Buts (Équipe 1)</label>
+                        <input type="number" id="team1Goals" value="0" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label>Total Fautes (Équipe 1)</label>
+                        <input type="number" id="team1Fouls" value="0" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label>Changements (Équipe 1)</label>
+                        <input type="number" id="team1Subs" value="0" min="0" />
+                    </div>
+                </div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label>Total Buts (Équipe 2)</label>
+                        <input type="number" id="team2Goals" value="0" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label>Total Fautes (Équipe 2)</label>
+                        <input type="number" id="team2Fouls" value="0" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label>Changements (Équipe 2)</label>
+                        <input type="number" id="team2Subs" value="0" min="0" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes Finales / Highlights</label>
+                    <textarea id="finalNotes"></textarea>
+                </div>
+
+                <button class="btn btn-success" onclick="submitMatch()">✅ Clôturer & Envoyer Bilan</button>
+                <button class="btn btn-danger" style="margin-left: 10px;" onclick="resetAll()">🔄 Réinitialiser Tout</button>
+            </div>
+
+            <div class="section">
+                <h3>🔍 Vérification des Données</h3>
+                <div id="dataVerification" style="background: var(--bg-darker); padding: 15px; border-radius: 5px; max-height: 300px; overflow-y: auto;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: STATISTIQUES -->
+    <div id="stats" class="tab-content">
+        <div style="margin: 0 20px;">
+            <div class="section">
+                <h2>📈 Tableau de Bord & Analytique</h2>
+
+                <div class="stats-grid" id="statsCards"></div>
+
+                <div class="charts-container">
+                    <div class="chart-wrapper">
+                        <h3>Actions Clés par Équipe</h3>
+                        <canvas id="chart1"></canvas>
+                    </div>
+                    <div class="chart-wrapper">
+                        <h3>Répartition des Actions</h3>
+                        <canvas id="chart2"></canvas>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                        <h3>Intensité du Match (par 10 min)</h3>
+                        <canvas id="chart3"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== CONFIGURATION ====================
+        let WEB_APP_URL = localStorage.getItem('webAppUrl') || '';
+        let currentMatchId = '';
+        let matchActive = false;
+        let timerInterval = null;
+        let timerSeconds = 0;
+        let liveActions = [];
+
+        // Initialiser
+        window.addEventListener('DOMContentLoaded', () => {
+            if (WEB_APP_URL) {
+                document.getElementById('webAppUrl').value = WEB_APP_URL;
+                document.getElementById('configStatus').textContent = '✅ Configuré';
+                document.getElementById('configStatus').style.color = 'var(--success)';
+            }
+            updateStatsDisplay();
+        });
+
+        // ==================== CONFIGURATION ====================
+        function saveWebAppUrl() {
+            const url = document.getElementById('webAppUrl').value.trim();
+            if (!url.includes('script.google.com') && !url.includes('script.googleusercontent.com')) {
+                showNotification('URL invalide. Veuillez coller l\'URL complète du Web App Google Apps Script.', 'error');
+                return;
+            }
+            WEB_APP_URL = url;
+            localStorage.setItem('webAppUrl', url);
+            document.getElementById('configStatus').textContent = '✅ Configuré';
+            document.getElementById('configStatus').style.color = 'var(--success)';
+            showNotification('Configuration sauvegardée avec succès !');
+        }
+
+        // ==================== TAB SWITCHING ====================
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'stats') {
+                setTimeout(() => {
+                    updateCharts();
+                }, 100);
+            }
+        }
+
+        // ==================== MATCH MANAGEMENT ====================
+        function startMatch() {
+            const matchId = document.getElementById('matchId').value.trim();
+            const team1 = document.getElementById('team1').value.trim();
+            const team2 = document.getElementById('team2').value.trim();
+            const comments = document.getElementById('beforeMatchNotes').value.trim();
+
+            if (!matchId || !team1 || !team2) {
+                showNotification('Veuillez remplir tous les champs obligatoires.', 'error');
+                return;
+            }
+
+            currentMatchId = matchId;
+            matchActive = true;
+            liveActions = [];
+
+            const payload = {
+                type: 'match_create',
+                matchId: matchId,
+                team1: team1,
+                team2: team2,
+                comments: comments
+            };
+
+            sendToGoogleSheets(payload).then(() => {
+                document.getElementById('matchInfo').innerHTML = `
+                    <strong>Match en cours :</strong> ${team1} vs ${team2} 
+                    <span class="status-badge active">EN DIRECT</span>
+                `;
+                document.getElementById('actionTeam').innerHTML = `
+                    <option value="">-- Sélectionner --</option>
+                    <option value="${team1}">${team1}</option>
+                    <option value="${team2}">${team2}</option>
+                `;
+                showNotification('Match créé et synchronisé avec Google Sheets !');
+                setTimeout(() => switchTab('pendant'), 500);
+            });
+        }
+
+        function submitMatch() {
+            if (!matchActive) {
+                showNotification('Aucun match en cours.', 'error');
+                return;
+            }
+
+            const team1 = document.getElementById('team1').value;
+            const team2 = document.getElementById('team2').value;
+            const finalScore1 = parseInt(document.getElementById('finalScore1').value) || 0;
+            const finalScore2 = parseInt(document.getElementById('finalScore2').value) || 0;
+            const team1Goals = parseInt(document.getElementById('team1Goals').value) || 0;
+            const team1Fouls = parseInt(document.getElementById('team1Fouls').value) || 0;
+            const team1Subs = parseInt(document.getElementById('team1Subs').value) || 0;
+            const team2Goals = parseInt(document.getElementById('team2Goals').value) || 0;
+            const team2Fouls = parseInt(document.getElementById('team2Fouls').value) || 0;
+            const team2Subs = parseInt(document.getElementById('team2Subs').value) || 0;
+            const notes = document.getElementById('finalNotes').value;
+
+            const payload1 = {
+                type: 'bilan_match',
+                matchId: currentMatchId,
+                team: team1,
+                totalButs: team1Goals,
+                totalFautes: team1Fouls,
+                totalChangements: team1Subs,
+                actionsClés: liveActions.filter(a => a.type === 'Action Clé' && a.team === team1).length,
+                erreurs: liveActions.filter(a => a.type === 'Erreur' && a.team === team1).length,
+                notes: notes
+            };
+
+            const payload2 = {
+                type: 'bilan_match',
+                matchId: currentMatchId,
+                team: team2,
+                totalButs: team2Goals,
+                totalFautes: team2Fouls,
+                totalChangements: team2Subs,
+                actionsClés: liveActions.filter(a => a.type === 'Action Clé' && a.team === team2).length,
+                erreurs: liveActions.filter(a => a.type === 'Erreur' && a.team === team2).length,
+                notes: notes
+            };
+
+            Promise.all([
+                sendToGoogleSheets(payload1),
+                sendToGoogleSheets(payload2)
+            ]).then(() => {
+                matchActive = false;
+                pauseTimer();
+                document.getElementById('matchInfo').innerHTML = `
+                    <strong>Match terminé :</strong> ${team1} ${finalScore1} - ${finalScore2} ${team2}
+                    <span class="status-badge ended">CLÔTURÉ</span>
+                `;
+                showNotification('Bilan du match envoyé avec succès !');
+            });
+        }
+
+        function resetAll() {
+            if (confirm('Réinitialiser complètement ? Cela effacera toutes les données du match en cours.')) {
+                document.querySelectorAll('input[type="text"], input[type="number"], textarea, select').forEach(el => {
+                    if (el.type === 'number') el.value = 0;
+                    else el.value = '';
+                });
+                liveActions = [];
+                currentMatchId = '';
+                matchActive = false;
+                pauseTimer();
+                resetTimer();
+                document.getElementById('actionsList').innerHTML = '';
+                document.getElementById('matchInfo').textContent = 'Aucun match en cours';
+                showNotification('Tout a été réinitialisé.');
+            }
+        }
+
+        // ==================== TIMER ====================
+        function startTimer() {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timerSeconds = 0;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            document.getElementById('timerDisplay').textContent = 
+                String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+        }
+
+        function getCurrentMinute() {
+            return Math.floor(timerSeconds / 60);
+        }
+
+        // ==================== LIVE ACTIONS ====================
+        function quickAction(actionType) {
+            if (!matchActive) {
+                showNotification('Veuillez d\'abord créer un match.', 'error');
+                return;
+            }
+
+            const team = document.getElementById('actionTeam').value;
+            const minute = getCurrentMinute();
+
+            if (!team) {
+                showNotification('Veuillez sélectionner une équipe.', 'error');
+                return;
+            }
+
+            // Gestion spéciale pour les changements
+            if (actionType === 'Changement') {
+                const playerOut = document.getElementById('playerOut').value.trim();
+                const playerIn = document.getElementById('playerIn').value.trim();
+
+                if (!playerOut || !playerIn) {
+                    showNotification('Veuillez saisir les deux numéros de dossard (sortant et entrant).', 'error');
+                    return;
+                }
+
+                const action = {
+                    matchId: currentMatchId,
+                    minute: minute,
+                    team: team,
+                    actionType: actionType,
+                    player: `${playerOut}→${playerIn}`,
+                    playerOut: playerOut,
+                    playerIn: playerIn,
+                    description: `#${playerOut} remplacé par #${playerIn}`,
+                    timestamp: new Date().getTime()
+                };
+
+                liveActions.push(action);
+
+                const payload = {
+                    type: 'action_live',
+                    matchId: currentMatchId,
+                    minute: minute,
+                    team: team,
+                    actionType: actionType,
+                    player: `Sortant: #${playerOut} | Entrant: #${playerIn}`,
+                    description: `Remplacement du #${playerOut} par le #${playerIn}`
+                };
+
+                sendToGoogleSheets(payload).then(() => {
+                    displayAction(action);
+                    document.getElementById('playerOut').value = '';
+                    document.getElementById('playerIn').value = '';
+                    document.getElementById('actionDescription').value = '';
+                    document.getElementById('substitutionSection').style.display = 'none';
+                });
+                return;
+            }
+
+            // Actions normales (But, Faute, Action Clé, Erreur)
+            const player = document.getElementById('actionPlayer').value.trim();
+            const description = document.getElementById('actionDescription').value.trim();
+
+            const action = {
+                matchId: currentMatchId,
+                minute: minute,
+                team: team,
+                actionType: actionType,
+                player: player,
+                description: description,
+                timestamp: new Date().getTime()
+            };
+
+            liveActions.push(action);
+
+            const payload = {
+                type: 'action_live',
+                matchId: currentMatchId,
+                minute: minute,
+                team: team,
+                actionType: actionType,
+                player: player,
+                description: description
+            };
+
+            sendToGoogleSheets(payload).then(() => {
+                displayAction(action);
+                document.getElementById('actionPlayer').value = '';
+                document.getElementById('actionDescription').value = '';
+            });
+        }
+
+        function displayAction(action) {
+            const list = document.getElementById('actionsList');
+            const item = document.createElement('div');
+            item.className = 'action-item';
+            
+            let playerDisplay = '';
+            if (action.actionType === 'Changement') {
+                // Format spécial pour les changements
+                playerDisplay = `<span class="action-item-substitution">
+                    <span style="color: var(--danger);">#${action.playerOut}</span>
+                    <span style="color: var(--text-secondary); margin: 0 5px;">→</span>
+                    <span style="color: var(--success);">#${action.playerIn}</span>
+                </span>`;
+            } else {
+                // Format normal pour autres actions
+                playerDisplay = action.player ? `<span class="action-item-dossard">#${action.player}</span>` : '';
+            }
+            
+            item.innerHTML = `
+                <span class="action-item-time">${action.minute}'</span>
+                <span class="action-item-type">${action.actionType}</span>
+                <span class="action-item-desc">${action.team}${playerDisplay}</span>
+                <button class="action-item-delete" onclick="deleteAction(${action.timestamp})">Supprimer</button>
+            `;
+            list.prepend(item);
+        }
+
+        function toggleSubstitutionForm() {
+            const section = document.getElementById('substitutionSection');
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+                document.getElementById('playerOut').focus();
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+        function deleteAction(timestamp) {
+            liveActions = liveActions.filter(a => a.timestamp !== timestamp);
+            document.getElementById('actionsList').innerHTML = '';
+            liveActions.forEach(displayAction);
+        }
+
+        // ==================== GOOGLE SHEETS SYNC ====================
+        function sendToGoogleSheets(payload) {
+            if (!WEB_APP_URL) {
+                showNotification('Veuillez d\'abord configurer l\'URL du Web App Google Apps Script.', 'error');
+                return Promise.reject('No URL configured');
+            }
+
+            return fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).catch(err => {
+                console.log('Envoi effectué (no-cors mode)', payload);
+                return Promise.resolve();
+            });
+        }
+
+        // ==================== NOTIFICATIONS ====================
+        function showNotification(message, type = 'success') {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.className = type === 'error' ? 'notification error' : 'notification';
+            notif.style.display = 'block';
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 3000);
+        }
+
+        // ==================== STATISTIQUES & CHARTS ====================
+        function updateStatsDisplay() {
+            if (liveActions.length === 0) return;
+
+            const team1 = document.getElementById('team1').value || 'Équipe 1';
+            const team2 = document.getElementById('team2').value || 'Équipe 2';
+
+            const stats = {
+                totalButs: liveActions.filter(a => a.actionType === 'But').length,
+                totalFautes: liveActions.filter(a => a.actionType === 'Faute').length,
+                totalChangements: liveActions.filter(a => a.actionType === 'Changement').length,
+                actionsClés: liveActions.filter(a => a.actionType === 'Action Clé').length,
+                erreurs: liveActions.filter(a => a.actionType === 'Erreur').length,
+                team1Buts: liveActions.filter(a => a.actionType === 'But' && a.team === team1).length,
+                team2Buts: liveActions.filter(a => a.actionType === 'But' && a.team === team2).length
+            };
+
+            const statsHtml = `
+                <div class="stat-card">
+                    <div class="stat-card-label">Total Buts</div>
+                    <div class="stat-card-value">${stats.totalButs}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Total Fautes</div>
+                    <div class="stat-card-value">${stats.totalFautes}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Actions Clés</div>
+                    <div class="stat-card-value">${stats.actionsClés}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Erreurs</div>
+                    <div class="stat-card-value">${stats.erreurs}</div>
+                </div>
+            `;
+            document.getElementById('statsCards').innerHTML = statsHtml;
+        }
+
+        const chartInstances = {};
+
+        function updateCharts() {
+            updateStatsDisplay();
+
+            const team1 = document.getElementById('team1').value || 'Équipe 1';
+            const team2 = document.getElementById('team2').value || 'Équipe 2';
+
+            // Chart 1: Actions par équipe
+            const team1ActionCount = {
+                But: liveActions.filter(a => a.team === team1 && a.actionType === 'But').length,
+                Faute: liveActions.filter(a => a.team === team1 && a.actionType === 'Faute').length,
+                'Action Clé': liveActions.filter(a => a.team === team1 && a.actionType === 'Action Clé').length
+            };
+
+            const team2ActionCount = {
+                But: liveActions.filter(a => a.team === team2 && a.actionType === 'But').length,
+                Faute: liveActions.filter(a => a.team === team2 && a.actionType === 'Faute').length,
+                'Action Clé': liveActions.filter(a => a.team === team2 && a.actionType === 'Action Clé').length
+            };
+
+            if (chartInstances.chart1) chartInstances.chart1.destroy();
+            const ctx1 = document.getElementById('chart1').getContext('2d');
+            chartInstances.chart1 = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['But', 'Faute', 'Action Clé'],
+                    datasets: [
+                        {
+                            label: team1,
+                            data: [team1ActionCount.But, team1ActionCount.Faute, team1ActionCount['Action Clé']],
+                            backgroundColor: '#00a8ff',
+                            borderColor: '#0081cc',
+                            borderWidth: 2
+                        },
+                        {
+                            label: team2,
+                            data: [team2ActionCount.But, team2ActionCount.Faute, team2ActionCount['Action Clé']],
+                            backgroundColor: '#2ecc71',
+                            borderColor: '#27ae60',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ecf0f1', font: { size: 12 } }
+                        }
+                    },
+                    scales: {
+                        y: { ticks: { color: '#ecf0f1' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                        x: { ticks: { color: '#ecf0f1' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                    }
+                }
+            });
+
+            // Chart 2: Répartition actions
+            const actionTypes = {};
+            liveActions.forEach(a => {
+                actionTypes[a.actionType] = (actionTypes[a.actionType] || 0) + 1;
+            });
+
+            if (chartInstances.chart2) chartInstances.chart2.destroy();
+            const ctx2 = document.getElementById('chart2').getContext('2d');
+            chartInstances.chart2 = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(actionTypes),
+                    datasets: [{
+                        data: Object.values(actionTypes),
+                        backgroundColor: ['#00a8ff', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'],
+                        borderColor: '#1a1a2e',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ecf0f1', font: { size: 12 } }
+                        }
+                    }
+                }
+            });
+
+            // Chart 3: Intensité par 10 min
+            const intensityByTime = {};
+            for (let i = 0; i <= 90; i += 10) {
+                const key = `${i}-${i + 10}'`;
+                intensityByTime[key] = liveActions.filter(a => a.minute >= i && a.minute < i + 10).length;
+            }
+
+            if (chartInstances.chart3) chartInstances.chart3.destroy();
+            const ctx3 = document.getElementById('chart3').getContext('2d');
+            chartInstances.chart3 = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(intensityByTime),
+                    datasets: [{
+                        label: 'Nombre d\'actions',
+                        data: Object.values(intensityByTime),
+                        borderColor: '#00a8ff',
+                        backgroundColor: 'rgba(0, 168, 255, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#00a8ff',
+                        pointBorderColor: '#0081cc',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ecf0f1', font: { size: 12 } }
+                        }
+                    },
+                    scales: {
+                        y: { ticks: { color: '#ecf0f1' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                        x: { ticks: { color: '#ecf0f1' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
