@@ -1976,8 +1976,19 @@
                 team2Players: team2Players
             };
 
+            // Mise à jour du statut du match (EN_COURS -> TERMINE) + score final
+            const matchEndPayload = {
+                type: 'match_end',
+                matchId: matchId,
+                status: 'TERMINE',
+                scoreT1: team1Stats.buts,
+                scoreT2: team2Stats.buts,
+                comments: comments
+            };
+
             // Envoyer tous les payloads
             Promise.all([
+                sendToGoogleSheets(matchEndPayload, `matchend_${matchId}`),
                 sendToGoogleSheets(bilanTeam1),
                 sendToGoogleSheets(bilanTeam2),
                 sendToGoogleSheets(playerStatsPayload)
