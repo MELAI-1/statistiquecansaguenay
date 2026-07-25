@@ -232,936 +232,1175 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            color: var(--text-secondary);
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: bold;
+            color: var(--text-primary);
         }
 
         .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group select {
             width: 100%;
             padding: 10px;
             background: var(--bg-dark);
-            border: 1px solid var(--surface-light);
+            border: 1px solid var(--primary);
             border-radius: 5px;
             color: var(--text-primary);
             font-size: 14px;
-            font-family: inherit;
         }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .form-row-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
-        }
-
-        /* Chronomètre */
-        .timer-display {
-            font-size: 60px;
-            font-weight: bold;
-            text-align: center;
-            color: var(--primary);
-            margin: 30px 0;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-            background: var(--bg-darker);
-            padding: 20px;
-            border-radius: 10px;
-            border: 2px solid var(--primary);
-        }
-
-        .timer-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+        .form-group input::placeholder,
+        .form-group select::placeholder {
+            color: var(--text-secondary);
         }
 
         /* Action Buttons */
         .action-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            display: flex;
             gap: 10px;
-            margin-top: 20px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+            justify-content: center;
         }
 
         .action-btn {
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
+            flex: 1;
+            min-width: 120px;
+            padding: 12px;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 12px;
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             transition: all 0.3s ease;
-            color: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        }
-
-        .action-btn.but {
-            background: var(--success);
-        }
-
-        .action-btn.but:hover {
-            background: #27ae60;
-        }
-
-        .action-btn.faute {
-            background: var(--danger);
-        }
-
-        .action-btn.faute:hover {
-            background: #c0392b;
-        }
-
-        .action-btn.changement {
-            background: var(--info);
-        }
-
-        .action-btn.changement:hover {
-            background: #2980b9;
-        }
-
-        .action-btn.action-cle {
             background: var(--primary);
+            color: white;
         }
 
-        .action-btn.action-cle:hover {
-            background: var(--primary-dark);
+        /* Substitution Form */
+        #substitutionSection {
+            display: none;
+            background: rgba(0, 168, 255, 0.1);
+            border: 2px solid var(--primary);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
         }
 
-        .action-btn.erreur {
-            background: var(--warning);
+        .substitution-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
-        .action-btn.erreur:hover {
-            background: #d68910;
+        .substitution-field {
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Journal d'actions */
-        .actions-log {
-            background: var(--bg-darker);
-            border-radius: 8px;
+        .substitution-field label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .substitution-field input {
+            padding: 12px;
+            background: var(--bg-dark);
+            border: 2px solid var(--primary);
+            border-radius: 5px;
+            color: var(--text-primary);
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .substitution-field.out input {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .substitution-field.in input {
+            border-color: #2ecc71;
+            color: #2ecc71;
+        }
+
+        /* Actions List */
+        .actions-list {
             max-height: 400px;
             overflow-y: auto;
-            margin-top: 20px;
+            background: var(--bg-dark);
+            border-radius: 5px;
+            padding: 10px;
         }
 
         .action-item {
-            padding: 12px;
-            border-bottom: 1px solid var(--surface-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 10px;
+            background: var(--surface-light);
+            margin-bottom: 8px;
+            border-radius: 5px;
             gap: 10px;
-        }
-
-        .action-item:last-child {
-            border-bottom: none;
+            flex-wrap: wrap;
         }
 
         .action-item-time {
-            color: var(--primary);
+            min-width: 50px;
             font-weight: bold;
-            min-width: 60px;
+            color: var(--warning);
         }
 
         .action-item-type {
-            background: var(--surface-light);
-            padding: 3px 8px;
+            padding: 4px 8px;
+            background: var(--primary);
             border-radius: 3px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: bold;
-            text-transform: uppercase;
-            flex-shrink: 0;
         }
 
         .action-item-desc {
             flex: 1;
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .action-item-delete {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 11px;
-            flex-shrink: 0;
-        }
-
-        .action-item-delete:hover {
-            background: #c0392b;
+            min-width: 150px;
         }
 
         .action-item-dossard {
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 14px;
-            background: rgba(0, 168, 255, 0.1);
-            padding: 2px 6px;
+            margin-left: 5px;
+            padding: 2px 8px;
+            background: var(--primary);
             border-radius: 3px;
-            margin-left: 5px;
-        }
-
-        .action-item-substitution {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(52, 152, 219, 0.1);
-            padding: 3px 8px;
-            border-radius: 4px;
-            margin-left: 5px;
             font-weight: bold;
-            font-size: 14px;
         }
 
-        .action-item-substitution span {
-            font-size: 13px;
+        .action-item-dossard.out {
+            background: #e74c3c;
         }
 
-        /* Statistiques */
-        .stats-grid {
+        .action-item-dossard.in {
+            background: #2ecc71;
+        }
+
+        .action-item-delete {
+            padding: 5px 10px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Stats Cards */
+        .stats-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
         }
 
         .stat-card {
-            background: var(--bg-darker);
+            background: var(--surface-light);
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             text-align: center;
-            border-top: 3px solid var(--primary);
-        }
-
-        .stat-card-value {
-            font-size: 36px;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 10px 0;
+            border-left: 4px solid var(--primary);
         }
 
         .stat-card-label {
             color: var(--text-secondary);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary);
         }
 
         /* Charts */
         .charts-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
         }
 
         .chart-wrapper {
             background: var(--surface);
             padding: 20px;
             border-radius: 10px;
-            border-left: 4px solid var(--primary);
             position: relative;
-            height: 400px;
+            height: 300px;
         }
 
-        .chart-wrapper h3 {
+        /* Match Summary Table */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .summary-table th,
+        .summary-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--surface-light);
+        }
+
+        .summary-table th {
+            background: var(--surface-light);
             color: var(--primary);
-            margin-bottom: 15px;
-            text-align: center;
+            font-weight: bold;
         }
 
-        .chart-wrapper canvas {
-            max-height: 350px;
+        .summary-table tr:hover {
+            background: var(--surface-light);
         }
 
-        /* Dropdown notification */
+        /* Notification */
         .notification {
             position: fixed;
             top: 80px;
-            right: 20px;
-            padding: 15px 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
             background: var(--success);
             color: white;
             border-radius: 5px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: none;
             z-index: 1000;
-            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .notification.error {
             background: var(--danger);
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        /* Player Stats Table */
+        .player-stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 13px;
         }
 
-        /* Status Badge */
-        .status-badge {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+        .player-stats-table th,
+        .player-stats-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid var(--surface-light);
+        }
+
+        .player-stats-table th {
+            background: var(--surface-light);
+            color: var(--primary);
             font-weight: bold;
-            text-transform: uppercase;
         }
 
-        .status-badge.active {
-            background: var(--success);
-            color: white;
+        .player-stats-table .dossard-cell {
+            font-weight: bold;
+            color: var(--primary);
+            text-align: left;
         }
 
-        .status-badge.ended {
-            background: var(--danger);
-            color: white;
+        /* Print Styles */
+        @media print {
+            .config-zone,
+            .tabs,
+            .tab-btn,
+            .action-buttons,
+            .btn,
+            .notification {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .section,
+            .chart-wrapper,
+            .summary-table,
+            .player-stats-table {
+                background: white;
+                color: black;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
+
+            .section h2,
+            .section h3,
+            .summary-table th {
+                color: #333;
+            }
+
+            .action-item-type,
+            .action-item-dossard {
+                background: #f0f0f0 !important;
+                color: #333 !important;
+            }
+
+            .stat-card-value {
+                color: #333;
+            }
+
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+
+            table {
+                page-break-inside: avoid;
+            }
+
+            .tab-content {
+                page-break-inside: avoid;
+            }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .form-row,
-            .form-row-3 {
+            .substitution-fields {
                 grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                margin: 10px;
+            }
+
+            .tab-btn {
+                font-size: 12px;
+                padding: 10px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                min-width: unset;
             }
 
             .charts-container {
                 grid-template-columns: 1fr;
             }
 
-            .timer-display {
-                font-size: 40px;
+            .summary-table,
+            .player-stats-table {
+                font-size: 12px;
             }
 
-            .header h1 {
-                font-size: 20px;
-            }
-
-            .tabs {
-                margin: 20px 10px;
-            }
-
-            .tab-content {
-                padding: 20px 10px;
-            }
-
-            .section {
-                margin: 10px 0;
-                padding: 15px;
-            }
-
-            .action-buttons {
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            .summary-table th,
+            .summary-table td {
+                padding: 8px;
             }
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        .match-status {
+            text-align: center;
+            padding: 20px;
+            background: var(--surface);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--success);
         }
 
-        ::-webkit-scrollbar-track {
-            background: var(--bg-darker);
+        .match-status.closed {
+            border-left-color: var(--danger);
         }
 
-        ::-webkit-scrollbar-thumb {
+        .team-section {
+            background: var(--surface-light);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .team-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        /* Player Dossards */
+        .player-dossard {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
             background: var(--primary);
-            border-radius: 4px;
+            color: white;
+            border-radius: 5px;
+            margin: 5px;
+            font-weight: bold;
+            font-size: 14px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
+        .player-dossard.titulaire {
+            background: var(--primary);
+        }
+
+        .player-dossard.remplacant {
+            background: var(--success);
+        }
+
+        .player-dossard button {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .player-dossard button:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .players-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .verification-status-ok {
+            background: rgba(46, 204, 113, 0.2) !important;
+            border: 2px solid #2ecc71 !important;
+            color: #2ecc71 !important;
+        }
+
+        .verification-status-error {
+            background: rgba(231, 76, 60, 0.2) !important;
+            border: 2px solid #e74c3c !important;
+            color: #e74c3c !important;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <div class="header">
-        <h1>⚽ CHECKLIST & LIVE TAGGING TOOL</h1>
-        <div class="subtitle">Analyse Sportive en Direct - Intégration Google Sheets</div>
+        <h1>⚽ Checklist & Live Tagging Tool</h1>
+        <div class="subtitle">Analyse Sportive en Temps Réel</div>
     </div>
 
-    <!-- Configuration -->
+    <div class="notification" id="notification"></div>
+
     <div class="config-zone">
-        <h3>⚙️ Configuration - Web App Google Apps Script</h3>
+        <h3>⚙️ Configuration</h3>
         <div class="config-input-group">
-            <input type="text" id="webAppUrl" placeholder="Collez l'URL de votre Web App Google Apps Script (https://script.google.com/...)" />
-            <button class="btn btn-primary" onclick="saveWebAppUrl()">💾 Sauvegarder</button>
-            <span id="configStatus" style="color: var(--text-secondary); font-size: 12px;">Non configuré</span>
+            <input type="text" id="webAppUrl" placeholder="URL du Web App Google Apps Script (optionnel)">
+            <button class="btn btn-primary" onclick="saveWebAppUrl()">💾 Sauvegarder URL</button>
         </div>
     </div>
 
-    <!-- Tabs -->
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('avant')">📋 Avant Match</button>
-        <button class="tab-btn" onclick="switchTab('pendant')">⏱️ Pendant Match</button>
-        <button class="tab-btn" onclick="switchTab('apres')">📊 Après Match</button>
+        <button class="tab-btn active" onclick="switchTab('beforeMatch')">📋 Avant Match</button>
+        <button class="tab-btn" onclick="switchTab('liveMatch')">⏱️ Pendant Match</button>
+        <button class="tab-btn" onclick="switchTab('afterMatch')">📊 Après Match</button>
         <button class="tab-btn" onclick="switchTab('stats')">📈 Statistiques</button>
     </div>
 
-    <!-- Notification -->
-    <div id="notification" style="display: none;"></div>
-
-    <!-- TAB 1: AVANT MATCH -->
-    <div id="avant" class="tab-content active">
-        <div style="margin: 0 20px;">
-            <div class="section">
-                <h2>📋 Checklist Avant Match</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 20px;">Préparation du match et vérification des informations</p>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Identifiant Match</label>
-                        <input type="text" id="matchId" placeholder="ex: MATCH_001" />
-                    </div>
-                    <div class="form-group">
-                        <label>Date du Match</label>
-                        <input type="date" id="matchDate" />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Équipe 1</label>
-                        <input type="text" id="team1" placeholder="ex: FC Lyon" />
-                    </div>
-                    <div class="form-group">
-                        <label>Équipe 2</label>
-                        <input type="text" id="team2" placeholder="ex: AS Saint-Étienne" />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Compositions d'Équipes (Lien Feuille)</label>
-                    <input type="text" id="compositionLink" placeholder="https://docs.google.com/..." />
-                </div>
-
-                <div class="form-group">
-                    <label>Notes / Observations</label>
-                    <textarea id="beforeMatchNotes"></textarea>
-                </div>
-
-                <button class="btn btn-success" onclick="startMatch()">✅ Créer & Démarrer le Match</button>
+    <!-- TAB 1: Avant Match -->
+    <div id="beforeMatch" class="tab-content active">
+        <div class="section">
+            <h2>📋 Configuration du Match</h2>
+            <div class="form-group">
+                <label>Équipe 1</label>
+                <input type="text" id="team1" placeholder="Nom de l'équipe 1" value="FC Lyon" onchange="updatePlayerTeamDisplay()">
             </div>
-
-            <div class="section">
-                <h3>✓ Checklist Préparation</h3>
-                <div style="display: grid; gap: 10px;">
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-secondary);">
-                        <input type="checkbox" id="check1" /> Compositions vérifiées
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-secondary);">
-                        <input type="checkbox" id="check2" /> Arbitres confirmés
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-secondary);">
-                        <input type="checkbox" id="check3" /> Conditions météo vérifiées
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-secondary);">
-                        <input type="checkbox" id="check4" /> Appareils de streaming prêts
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-secondary);">
-                        <input type="checkbox" id="check5" /> Feuille Google connectée
-                    </label>
-                </div>
+            <div class="form-group">
+                <label>Équipe 2</label>
+                <input type="text" id="team2" placeholder="Nom de l'équipe 2" value="AS Étienne" onchange="updatePlayerTeamDisplay()">
+            </div>
+            <div class="form-group">
+                <label>Date du Match</label>
+                <input type="date" id="matchDate">
+            </div>
+            <div class="form-group">
+                <label>Lieu</label>
+                <input type="text" id="matchLocation" placeholder="Lieu du match">
             </div>
         </div>
-    </div>
 
-    <!-- TAB 2: PENDANT MATCH -->
-    <div id="pendant" class="tab-content">
-        <div style="margin: 0 20px;">
-            <div class="section">
-                <h2>⏱️ Saisie Temps Réel</h2>
-                <div style="color: var(--text-secondary); margin-bottom: 20px;" id="matchInfo">Aucun match en cours</div>
+        <!-- Section Gestion des Joueurs -->
+        <div class="section">
+            <h2>👥 Gestion des Joueurs</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">
+                ℹ️ Ajoutez les dossards des titulaires et remplaçants pour chaque équipe. Le nombre total de joueurs doit être identique aux deux équipes.
+            </p>
 
-                <div class="timer-display" id="timerDisplay">00:00</div>
+            <!-- Team Selector -->
+            <div class="form-group">
+                <label>Équipe en cours</label>
+                <select id="playerTeamSelector" onchange="switchPlayerTeam()">
+                    <option value="0">FC Lyon</option>
+                    <option value="1">AS Étienne</option>
+                </select>
+            </div>
 
-                <div class="timer-controls">
-                    <button class="btn btn-primary" onclick="startTimer()">▶ Démarrer</button>
-                    <button class="btn btn-warning" onclick="pauseTimer()">⏸ Pause</button>
-                    <button class="btn btn-danger" onclick="resetTimer()">🔄 Réinitialiser</button>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Équipe</label>
-                        <select id="actionTeam">
-                            <option value="">-- Sélectionner --</option>
-                            <option value="Équipe 1">Équipe 1</option>
-                            <option value="Équipe 2">Équipe 2</option>
+            <!-- Players Input Section -->
+            <div style="background: var(--surface-light); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 id="currentTeamLabel">Joueurs - FC Lyon</h3>
+                
+                <div style="margin-bottom: 20px;">
+                    <label>Ajouter un dossard</label>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <input type="number" id="newPlayerDossard" placeholder="Numéro de dossard" min="1" max="99" style="flex: 1;">
+                        <select id="newPlayerStatus" style="flex: 1;">
+                            <option value="titulaire">Titulaire (sur le terrain)</option>
+                            <option value="remplacant">Remplaçant (banc)</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Numéro de Dossard (Optionnel)</label>
-                        <input type="number" id="actionPlayer" placeholder="Ex: 7, 10, 23" min="0" max="99" />
+                        <button class="btn btn-primary" onclick="addPlayerToTeam()">➕ Ajouter</button>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Description / Contexte</label>
-                    <textarea id="actionDescription" placeholder="Détails additionnels..."></textarea>
-                </div>
-
-                <!-- Section spéciale CHANGEMENT -->
-                <div id="substitutionSection" style="display: none; background: var(--surface-light); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 2px solid var(--info);">
-                    <h3 style="color: var(--info); margin-bottom: 15px;">🔄 Détails du Changement</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label style="color: var(--danger);">Dossard qui SORT</label>
-                            <input type="number" id="playerOut" placeholder="Ex: 7" min="0" max="99" />
-                        </div>
-                        <div class="form-group">
-                            <label style="color: var(--success);">Dossard qui ENTRE</label>
-                            <input type="number" id="playerIn" placeholder="Ex: 12" min="0" max="99" />
-                        </div>
+                <!-- Titulaires -->
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: var(--primary); margin-bottom: 10px;">📍 Titulaires (Sur le terrain)</h4>
+                    <div id="currentTeamTitulaires" style="background: var(--bg-dark); padding: 15px; border-radius: 8px; min-height: 60px;">
+                        <div style="text-align: center; color: var(--text-secondary);">Aucun titulaire ajouté</div>
                     </div>
-                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 10px;">💡 Remplissez ces deux champs avant de cliquer sur CHANGEMENT</p>
                 </div>
 
-                <h3>🎯 Actions Rapides (1-Clic)</h3>
-                <div class="action-buttons">
-                    <button class="action-btn but" onclick="quickAction('But')">⚽ BUT</button>
-                    <button class="action-btn faute" onclick="quickAction('Faute')">🛑 FAUTE</button>
-                    <button class="action-btn changement" onclick="toggleSubstitutionForm()">🔄 CHANGEMENT</button>
-                    <button class="action-btn action-cle" onclick="quickAction('Action Clé')">💡 ACTION CLÉ</button>
-                    <button class="action-btn erreur" onclick="quickAction('Erreur')">❌ ERREUR</button>
+                <!-- Remplaçants -->
+                <div>
+                    <h4 style="color: var(--success); margin-bottom: 10px;">🔄 Remplaçants (Banc)</h4>
+                    <div id="currentTeamRemplacants" style="background: var(--bg-dark); padding: 15px; border-radius: 8px; min-height: 60px;">
+                        <div style="text-align: center; color: var(--text-secondary);">Aucun remplaçant ajouté</div>
+                    </div>
                 </div>
+            </div>
 
-                <h3 style="margin-top: 30px;">📜 Journal d'Actions</h3>
-                <div class="actions-log" id="actionsList"></div>
+            <!-- Verification Section -->
+            <div id="verificationSection" style="background: var(--surface-light); padding: 20px; border-radius: 10px; margin-bottom: 20px; display: none;">
+                <h3>✅ Vérification des Effectifs</h3>
+                <table style="width: 100%; margin-top: 15px; font-size: 14px;">
+                    <tr style="border-bottom: 1px solid var(--primary);">
+                        <th style="text-align: left; padding: 10px;">Équipe</th>
+                        <th style="text-align: center; padding: 10px;">Titulaires</th>
+                        <th style="text-align: center; padding: 10px;">Remplaçants</th>
+                        <th style="text-align: center; padding: 10px;">Total</th>
+                    </tr>
+                    <tr id="verificationTeam1">
+                        <td style="padding: 10px;"><strong id="verif1Name">FC Lyon</strong></td>
+                        <td style="text-align: center; padding: 10px;"><span id="verif1Tit">0</span></td>
+                        <td style="text-align: center; padding: 10px;"><span id="verif1Rem">0</span></td>
+                        <td style="text-align: center; padding: 10px;"><strong id="verif1Total">0</strong></td>
+                    </tr>
+                    <tr id="verificationTeam2">
+                        <td style="padding: 10px;"><strong id="verif2Name">AS Étienne</strong></td>
+                        <td style="text-align: center; padding: 10px;"><span id="verif2Tit">0</span></td>
+                        <td style="text-align: center; padding: 10px;"><span id="verif2Rem">0</span></td>
+                        <td style="text-align: center; padding: 10px;"><strong id="verif2Total">0</strong></td>
+                    </tr>
+                </table>
+                <div id="verificationStatus" style="margin-top: 15px; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; background: var(--bg-dark);">
+                    Effectifs non équilibrés
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-warning" onclick="toggleVerification()">🔍 Vérifier les Effectifs</button>
+                <button class="btn btn-success" id="startMatchBtn" onclick="startMatch()" disabled>▶️ Démarrer le Match</button>
+                <button class="btn btn-danger" onclick="clearAllPlayers()">🗑️ Réinitialiser les Joueurs</button>
             </div>
         </div>
     </div>
 
-    <!-- TAB 3: APRÈS MATCH -->
-    <div id="apres" class="tab-content">
-        <div style="margin: 0 20px;">
-            <div class="section">
-                <h2>📊 Bilan Après Match</h2>
+    <!-- TAB 2: Pendant Match -->
+    <div id="liveMatch" class="tab-content">
+        <div class="section">
+            <h2>⏱️ Actions du Match en Direct</h2>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Équipe 1 - Score Final</label>
-                        <input type="number" id="finalScore1" value="0" min="0" />
-                    </div>
-                    <div class="form-group">
-                        <label>Équipe 2 - Score Final</label>
-                        <input type="number" id="finalScore2" value="0" min="0" />
-                    </div>
-                </div>
-
-                <h3>📈 Résumé Statistiques</h3>
-                <div class="form-row-3">
-                    <div class="form-group">
-                        <label>Total Buts (Équipe 1)</label>
-                        <input type="number" id="team1Goals" value="0" min="0" />
-                    </div>
-                    <div class="form-group">
-                        <label>Total Fautes (Équipe 1)</label>
-                        <input type="number" id="team1Fouls" value="0" min="0" />
-                    </div>
-                    <div class="form-group">
-                        <label>Changements (Équipe 1)</label>
-                        <input type="number" id="team1Subs" value="0" min="0" />
-                    </div>
-                </div>
-
-                <div class="form-row-3">
-                    <div class="form-group">
-                        <label>Total Buts (Équipe 2)</label>
-                        <input type="number" id="team2Goals" value="0" min="0" />
-                    </div>
-                    <div class="form-group">
-                        <label>Total Fautes (Équipe 2)</label>
-                        <input type="number" id="team2Fouls" value="0" min="0" />
-                    </div>
-                    <div class="form-group">
-                        <label>Changements (Équipe 2)</label>
-                        <input type="number" id="team2Subs" value="0" min="0" />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Notes Finales / Highlights</label>
-                    <textarea id="finalNotes"></textarea>
-                </div>
-
-                <button class="btn btn-success" onclick="submitMatch()">✅ Clôturer & Envoyer Bilan</button>
-                <button class="btn btn-danger" style="margin-left: 10px;" onclick="resetAll()">🔄 Réinitialiser Tout</button>
+            <div class="form-group">
+                <label>Équipe</label>
+                <select id="actionTeam">
+                    <option value="FC Lyon">FC Lyon</option>
+                    <option value="AS Étienne">AS Étienne</option>
+                </select>
             </div>
 
-            <div class="section">
-                <h3>🔍 Vérification des Données</h3>
-                <div id="dataVerification" style="background: var(--bg-darker); padding: 15px; border-radius: 5px; max-height: 300px; overflow-y: auto;"></div>
+            <div class="form-group">
+                <label>Minute du Match</label>
+                <input type="number" id="actionMinute" min="0" max="120" placeholder="Minute">
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn" onclick="addAction('But')">⚽ BUT</button>
+                <button class="action-btn" onclick="addAction('Faute')">🛑 FAUTE</button>
+                <button class="action-btn" onclick="toggleSubstitutionForm()">🔄 CHANGEMENT</button>
+                <button class="action-btn" onclick="addAction('Action Clé')">💡 ACTION CLÉ</button>
+                <button class="action-btn" onclick="addAction('Erreur')">❌ ERREUR</button>
+            </div>
+
+            <!-- Substitution Form -->
+            <div id="substitutionSection">
+                <h3>🔄 DÉTAILS DU CHANGEMENT</h3>
+                <div class="substitution-fields">
+                    <div class="substitution-field out">
+                        <label for="playerOut">Dossard qui SORT (en rouge)</label>
+                        <input type="number" id="playerOut" placeholder="Numéro du joueur" min="1" max="99">
+                    </div>
+                    <div class="substitution-field in">
+                        <label for="playerIn">Dossard qui ENTRE (en vert)</label>
+                        <input type="number" id="playerIn" placeholder="Numéro du remplaçant" min="1" max="99">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="submitSubstitution()">✅ Valider CHANGEMENT</button>
+            </div>
+
+            <!-- Description field for other actions -->
+            <div class="form-group" id="descriptionGroup" style="display:none;">
+                <label>Description (optionnel)</label>
+                <input type="text" id="actionDescription" placeholder="Détails supplémentaires">
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h3>📜 Journal des Actions</h3>
+                <div class="actions-list" id="actionsList"></div>
             </div>
         </div>
     </div>
 
-    <!-- TAB 4: STATISTIQUES -->
+    <!-- TAB 3: Après Match -->
+    <div id="afterMatch" class="tab-content">
+        <div class="match-status" id="matchStatus">
+            <p>Le match n'a pas encore commencé. Cliquez sur "Démarrer le Match" dans l'onglet "Avant Match".</p>
+        </div>
+
+        <div class="section">
+            <h2>📊 Résumé du Match</h2>
+            <table class="summary-table" id="matchSummaryTable">
+                <thead>
+                    <tr>
+                        <th>Équipe</th>
+                        <th>Buts</th>
+                        <th>Fautes</th>
+                        <th>Changements</th>
+                        <th>Actions Clés</th>
+                        <th>Erreurs</th>
+                    </tr>
+                </thead>
+                <tbody id="summaryTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-secondary);">Aucune donnée disponible</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section" id="team1StatsSection">
+            <h2>👥 Performance Individuelle - <span id="team1Name">Équipe 1</span></h2>
+            <table class="player-stats-table" id="team1PlayerStats">
+                <thead>
+                    <tr>
+                        <th>Dossard</th>
+                        <th>Buts</th>
+                        <th>Fautes</th>
+                        <th>Actions Clés</th>
+                        <th>Erreurs</th>
+                        <th>Temps de Jeu</th>
+                    </tr>
+                </thead>
+                <tbody id="team1PlayerBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-secondary);">Aucun joueur enregistré</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section" id="team2StatsSection">
+            <h2>👥 Performance Individuelle - <span id="team2Name">Équipe 2</span></h2>
+            <table class="player-stats-table" id="team2PlayerStats">
+                <thead>
+                    <tr>
+                        <th>Dossard</th>
+                        <th>Buts</th>
+                        <th>Fautes</th>
+                        <th>Actions Clés</th>
+                        <th>Erreurs</th>
+                        <th>Temps de Jeu</th>
+                    </tr>
+                </thead>
+                <tbody id="team2PlayerBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-secondary);">Aucun joueur enregistré</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>📝 Bilan Final</h2>
+            <div class="form-group">
+                <label>Observations/Commentaires</label>
+                <input type="text" id="finalComments" placeholder="Commentaires sur le match">
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-success" onclick="submitMatch()">✅ Clôturer & Envoyer</button>
+                <button class="btn btn-warning" onclick="window.print()">🖨️ Imprimer / Export PDF</button>
+                <button class="btn btn-danger" onclick="resetMatch()">🔄 Réinitialiser</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: Statistiques -->
     <div id="stats" class="tab-content">
-        <div style="margin: 0 20px;">
-            <div class="section">
-                <h2>📈 Tableau de Bord & Analytique</h2>
+        <div class="section">
+            <h2>📊 Statistiques Globales</h2>
+            <div class="stats-cards" id="statsCards">
+                <!-- Stats cards will be populated dynamically -->
+            </div>
+        </div>
 
-                <div class="stats-grid" id="statsCards"></div>
+        <div class="charts-container">
+            <div class="chart-wrapper">
+                <canvas id="chart1"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="chart2"></canvas>
+            </div>
+        </div>
 
-                <div class="charts-container">
-                    <div class="chart-wrapper">
-                        <h3>Actions Clés par Équipe</h3>
-                        <canvas id="chart1"></canvas>
-                    </div>
-                    <div class="chart-wrapper">
-                        <h3>Répartition des Actions</h3>
-                        <canvas id="chart2"></canvas>
-                    </div>
-                </div>
-
-                <div class="charts-container">
-                    <div class="chart-wrapper" style="grid-column: 1 / -1;">
-                        <h3>Intensité du Match (par 10 min)</h3>
-                        <canvas id="chart3"></canvas>
-                    </div>
-                </div>
+        <div class="charts-container">
+            <div class="chart-wrapper" style="grid-column: 1 / -1;">
+                <canvas id="chart3"></canvas>
             </div>
         </div>
     </div>
 
     <script>
-        // ==================== CONFIGURATION ====================
+        // ==================== GLOBAL STATE ====================
         let WEB_APP_URL = localStorage.getItem('webAppUrl') || '';
-        let currentMatchId = '';
-        let matchActive = false;
-        let timerInterval = null;
-        let timerSeconds = 0;
+        let matchInProgress = false;
         let liveActions = [];
+        let currentPlayerTeamIndex = 0;
+        let playersData = [
+            { name: 'FC Lyon', titulaires: [], remplacants: [] },
+            { name: 'AS Étienne', titulaires: [], remplacants: [] }
+        ];
 
-        // Initialiser
-        window.addEventListener('DOMContentLoaded', () => {
-            if (WEB_APP_URL) {
-                document.getElementById('webAppUrl').value = WEB_APP_URL;
-                document.getElementById('configStatus').textContent = '✅ Configuré';
-                document.getElementById('configStatus').style.color = 'var(--success)';
-            }
-            updateStatsDisplay();
-        });
-
-        // ==================== CONFIGURATION ====================
-        function saveWebAppUrl() {
-            const url = document.getElementById('webAppUrl').value.trim();
-            if (!url.includes('script.google.com') && !url.includes('script.googleusercontent.com')) {
-                showNotification('URL invalide. Veuillez coller l\'URL complète du Web App Google Apps Script.', 'error');
-                return;
-            }
-            WEB_APP_URL = url;
-            localStorage.setItem('webAppUrl', url);
-            document.getElementById('configStatus').textContent = '✅ Configuré';
-            document.getElementById('configStatus').style.color = 'var(--success)';
-            showNotification('Configuration sauvegardée avec succès !');
+        if (WEB_APP_URL) {
+            document.getElementById('webAppUrl').value = WEB_APP_URL;
         }
 
-        // ==================== TAB SWITCHING ====================
+        // ==================== INITIALIZATION ====================
+        document.getElementById('matchDate').valueAsDate = new Date();
+        updatePlayerTeamDisplay();
+
+        // ==================== GESTION DES JOUEURS ====================
+        function switchPlayerTeam() {
+            const selector = document.getElementById('playerTeamSelector');
+            currentPlayerTeamIndex = parseInt(selector.value);
+            updatePlayerTeamDisplay();
+        }
+
+        function updatePlayerTeamDisplay() {
+            const team1Name = document.getElementById('team1').value || 'FC Lyon';
+            const team2Name = document.getElementById('team2').value || 'AS Étienne';
+            
+            playersData[0].name = team1Name;
+            playersData[1].name = team2Name;
+
+            const currentTeam = playersData[currentPlayerTeamIndex];
+            const teamLabel = document.getElementById('currentTeamLabel');
+            teamLabel.textContent = `Joueurs - ${currentTeam.name}`;
+
+            // Update selectors
+            const selector = document.getElementById('playerTeamSelector');
+            selector.innerHTML = `
+                <option value="0">${team1Name}</option>
+                <option value="1">${team2Name}</option>
+            `;
+            selector.value = currentPlayerTeamIndex;
+
+            // Afficher les titulaires
+            displayPlayersGroup('titulaire');
+            // Afficher les remplaçants
+            displayPlayersGroup('remplacant');
+
+            // Mettre à jour la vérification
+            updateVerification();
+        }
+
+        function displayPlayersGroup(type) {
+            const currentTeam = playersData[currentPlayerTeamIndex];
+            const players = type === 'titulaire' ? currentTeam.titulaires : currentTeam.remplacants;
+            const containerId = type === 'titulaire' ? 'currentTeamTitulaires' : 'currentTeamRemplacants';
+            const container = document.getElementById(containerId);
+
+            if (players.length === 0) {
+                container.innerHTML = `<div style="text-align: center; color: var(--text-secondary);">Aucun ${type}</div>`;
+                return;
+            }
+
+            const playersHtml = players.map(dossard => `
+                <span class="player-dossard ${type}">
+                    #${dossard}
+                    <button onclick="removePlayer('${type}', ${dossard})" title="Supprimer">✕</button>
+                </span>
+            `).join('');
+
+            container.innerHTML = `<div class="players-container">${playersHtml}</div>`;
+        }
+
+        function addPlayerToTeam() {
+            const dossard = document.getElementById('newPlayerDossard').value.trim();
+            const status = document.getElementById('newPlayerStatus').value;
+
+            if (!dossard || isNaN(dossard)) {
+                showNotification('Veuillez entrer un numéro de dossard valide', 'error');
+                return;
+            }
+
+            const dossardNum = parseInt(dossard);
+            if (dossardNum < 1 || dossardNum > 99) {
+                showNotification('Le dossard doit être entre 1 et 99', 'error');
+                return;
+            }
+
+            const currentTeam = playersData[currentPlayerTeamIndex];
+            const allPlayers = [...currentTeam.titulaires, ...currentTeam.remplacants];
+
+            if (allPlayers.includes(dossardNum)) {
+                showNotification(`Le dossard #${dossardNum} est déjà dans cette équipe`, 'error');
+                return;
+            }
+
+            if (status === 'titulaire') {
+                currentTeam.titulaires.push(dossardNum);
+                currentTeam.titulaires.sort((a, b) => a - b);
+            } else {
+                currentTeam.remplacants.push(dossardNum);
+                currentTeam.remplacants.sort((a, b) => a - b);
+            }
+
+            document.getElementById('newPlayerDossard').value = '';
+            updatePlayerTeamDisplay();
+            showNotification(`Joueur #${dossardNum} ajouté (${status})`, 'success');
+        }
+
+        function removePlayer(type, dossard) {
+            const currentTeam = playersData[currentPlayerTeamIndex];
+            if (type === 'titulaire') {
+                currentTeam.titulaires = currentTeam.titulaires.filter(d => d !== dossard);
+            } else {
+                currentTeam.remplacants = currentTeam.remplacants.filter(d => d !== dossard);
+            }
+            updatePlayerTeamDisplay();
+            showNotification(`Joueur #${dossard} supprimé`, 'success');
+        }
+
+        function toggleVerification() {
+            const section = document.getElementById('verificationSection');
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+                updateVerification();
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+        function updateVerification() {
+            const team1Total = playersData[0].titulaires.length + playersData[0].remplacants.length;
+            const team2Total = playersData[1].titulaires.length + playersData[1].remplacants.length;
+
+            // Update table
+            document.getElementById('verif1Name').textContent = playersData[0].name;
+            document.getElementById('verif1Tit').textContent = playersData[0].titulaires.length;
+            document.getElementById('verif1Rem').textContent = playersData[0].remplacants.length;
+            document.getElementById('verif1Total').textContent = team1Total;
+
+            document.getElementById('verif2Name').textContent = playersData[1].name;
+            document.getElementById('verif2Tit').textContent = playersData[1].titulaires.length;
+            document.getElementById('verif2Rem').textContent = playersData[1].remplacants.length;
+            document.getElementById('verif2Total').textContent = team2Total;
+
+            // Verification status
+            const statusDiv = document.getElementById('verificationStatus');
+            const startBtn = document.getElementById('startMatchBtn');
+
+            if (team1Total === 0 || team2Total === 0) {
+                statusDiv.innerHTML = '⚠️ Veuillez ajouter au moins un joueur par équipe';
+                statusDiv.className = 'verification-status-error';
+                startBtn.disabled = true;
+                return;
+            }
+
+            if (team1Total === team2Total) {
+                statusDiv.innerHTML = `✅ Effectifs équilibrés (${team1Total} joueurs par équipe)`;
+                statusDiv.className = 'verification-status-ok';
+                startBtn.disabled = false;
+            } else {
+                statusDiv.innerHTML = `❌ Effectifs non équilibrés : ${playersData[0].name} (${team1Total}) vs ${playersData[1].name} (${team2Total})`;
+                statusDiv.className = 'verification-status-error';
+                startBtn.disabled = true;
+            }
+        }
+
+        function clearAllPlayers() {
+            if (confirm('Êtes-vous sûr de vouloir supprimer tous les joueurs ?')) {
+                playersData = [
+                    { name: 'FC Lyon', titulaires: [], remplacants: [] },
+                    { name: 'AS Étienne', titulaires: [], remplacants: [] }
+                ];
+                currentPlayerTeamIndex = 0;
+                updatePlayerTeamDisplay();
+                showNotification('Tous les joueurs ont été supprimés', 'success');
+            }
+        }
+
+        // ==================== TAB MANAGEMENT ====================
         function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
 
+            if (tabName === 'afterMatch' && matchInProgress) {
+                calculateMatchSummary();
+                calculatePlayerStats();
+            }
+
             if (tabName === 'stats') {
-                setTimeout(() => {
-                    updateCharts();
-                }, 100);
+                updateCharts();
+            }
+        }
+
+        // ==================== URL CONFIGURATION ====================
+        function saveWebAppUrl() {
+            const url = document.getElementById('webAppUrl').value.trim();
+            if (url) {
+                WEB_APP_URL = url;
+                localStorage.setItem('webAppUrl', url);
+                showNotification('URL sauvegardée !', 'success');
             }
         }
 
         // ==================== MATCH MANAGEMENT ====================
         function startMatch() {
-            const matchId = document.getElementById('matchId').value.trim();
             const team1 = document.getElementById('team1').value.trim();
             const team2 = document.getElementById('team2').value.trim();
-            const comments = document.getElementById('beforeMatchNotes').value.trim();
 
-            if (!matchId || !team1 || !team2) {
-                showNotification('Veuillez remplir tous les champs obligatoires.', 'error');
+            if (!team1 || !team2) {
+                showNotification('Veuillez remplir les noms des deux équipes', 'error');
                 return;
             }
 
-            currentMatchId = matchId;
-            matchActive = true;
+            if (team1 === team2) {
+                showNotification('Les deux équipes doivent avoir des noms différents', 'error');
+                return;
+            }
+
+            const team1Total = playersData[0].titulaires.length + playersData[0].remplacants.length;
+            const team2Total = playersData[1].titulaires.length + playersData[1].remplacants.length;
+
+            if (team1Total === 0 || team2Total === 0) {
+                showNotification('Veuillez ajouter au moins un joueur pour chaque équipe', 'error');
+                return;
+            }
+
+            if (team1Total !== team2Total) {
+                showNotification(`Effectifs non équilibrés : ${team1} (${team1Total}) vs ${team2} (${team2Total})`, 'error');
+                return;
+            }
+
+            matchInProgress = true;
             liveActions = [];
+            document.getElementById('actionsList').innerHTML = '';
+            document.getElementById('actionTeam').innerHTML = `
+                <option value="${team1}">${team1}</option>
+                <option value="${team2}">${team2}</option>
+            `;
 
-            const payload = {
-                type: 'match_create',
-                matchId: matchId,
-                team1: team1,
-                team2: team2,
-                comments: comments
+            switchTab('liveMatch');
+            showNotification(`Match démarré ! (${team1Total} joueurs par équipe)`, 'success');
+        }
+
+        function calculateMatchSummary() {
+            const team1 = document.getElementById('team1').value || 'Équipe 1';
+            const team2 = document.getElementById('team2').value || 'Équipe 2';
+
+            const team1Stats = {
+                buts: liveActions.filter(a => a.team === team1 && a.actionType === 'But').length,
+                fautes: liveActions.filter(a => a.team === team1 && a.actionType === 'Faute').length,
+                changements: liveActions.filter(a => a.team === team1 && a.actionType === 'Changement').length,
+                actionsClés: liveActions.filter(a => a.team === team1 && a.actionType === 'Action Clé').length,
+                erreurs: liveActions.filter(a => a.team === team1 && a.actionType === 'Erreur').length
             };
 
-            sendToGoogleSheets(payload).then(() => {
-                document.getElementById('matchInfo').innerHTML = `
-                    <strong>Match en cours :</strong> ${team1} vs ${team2} 
-                    <span class="status-badge active">EN DIRECT</span>
-                `;
-                document.getElementById('actionTeam').innerHTML = `
-                    <option value="">-- Sélectionner --</option>
-                    <option value="${team1}">${team1}</option>
-                    <option value="${team2}">${team2}</option>
-                `;
-                showNotification('Match créé et synchronisé avec Google Sheets !');
-                setTimeout(() => switchTab('pendant'), 500);
-            });
-        }
-
-        function submitMatch() {
-            if (!matchActive) {
-                showNotification('Aucun match en cours.', 'error');
-                return;
-            }
-
-            const team1 = document.getElementById('team1').value;
-            const team2 = document.getElementById('team2').value;
-            const finalScore1 = parseInt(document.getElementById('finalScore1').value) || 0;
-            const finalScore2 = parseInt(document.getElementById('finalScore2').value) || 0;
-            const team1Goals = parseInt(document.getElementById('team1Goals').value) || 0;
-            const team1Fouls = parseInt(document.getElementById('team1Fouls').value) || 0;
-            const team1Subs = parseInt(document.getElementById('team1Subs').value) || 0;
-            const team2Goals = parseInt(document.getElementById('team2Goals').value) || 0;
-            const team2Fouls = parseInt(document.getElementById('team2Fouls').value) || 0;
-            const team2Subs = parseInt(document.getElementById('team2Subs').value) || 0;
-            const notes = document.getElementById('finalNotes').value;
-
-            const payload1 = {
-                type: 'bilan_match',
-                matchId: currentMatchId,
-                team: team1,
-                totalButs: team1Goals,
-                totalFautes: team1Fouls,
-                totalChangements: team1Subs,
-                actionsClés: liveActions.filter(a => a.type === 'Action Clé' && a.team === team1).length,
-                erreurs: liveActions.filter(a => a.type === 'Erreur' && a.team === team1).length,
-                notes: notes
+            const team2Stats = {
+                buts: liveActions.filter(a => a.team === team2 && a.actionType === 'But').length,
+                fautes: liveActions.filter(a => a.team === team2 && a.actionType === 'Faute').length,
+                changements: liveActions.filter(a => a.team === team2 && a.actionType === 'Changement').length,
+                actionsClés: liveActions.filter(a => a.team === team2 && a.actionType === 'Action Clé').length,
+                erreurs: liveActions.filter(a => a.team === team2 && a.actionType === 'Erreur').length
             };
 
-            const payload2 = {
-                type: 'bilan_match',
-                matchId: currentMatchId,
-                team: team2,
-                totalButs: team2Goals,
-                totalFautes: team2Fouls,
-                totalChangements: team2Subs,
-                actionsClés: liveActions.filter(a => a.type === 'Action Clé' && a.team === team2).length,
-                erreurs: liveActions.filter(a => a.type === 'Erreur' && a.team === team2).length,
-                notes: notes
-            };
+            const tbody = document.getElementById('summaryTableBody');
+            tbody.innerHTML = `
+                <tr>
+                    <td><strong>${team1}</strong></td>
+                    <td>${team1Stats.buts}</td>
+                    <td>${team1Stats.fautes}</td>
+                    <td>${team1Stats.changements}</td>
+                    <td>${team1Stats.actionsClés}</td>
+                    <td>${team1Stats.erreurs}</td>
+                </tr>
+                <tr>
+                    <td><strong>${team2}</strong></td>
+                    <td>${team2Stats.buts}</td>
+                    <td>${team2Stats.fautes}</td>
+                    <td>${team2Stats.changements}</td>
+                    <td>${team2Stats.actionsClés}</td>
+                    <td>${team2Stats.erreurs}</td>
+                </tr>
+            `;
 
-            Promise.all([
-                sendToGoogleSheets(payload1),
-                sendToGoogleSheets(payload2)
-            ]).then(() => {
-                matchActive = false;
-                pauseTimer();
-                document.getElementById('matchInfo').innerHTML = `
-                    <strong>Match terminé :</strong> ${team1} ${finalScore1} - ${finalScore2} ${team2}
-                    <span class="status-badge ended">CLÔTURÉ</span>
+            if (matchInProgress) {
+                document.getElementById('matchStatus').innerHTML = `
+                    <p><strong>Match en cours :</strong> ${team1} <strong>${team1Stats.buts}</strong> - <strong>${team2Stats.buts}</strong> ${team2}</p>
                 `;
-                showNotification('Bilan du match envoyé avec succès !');
-            });
-        }
-
-        function resetAll() {
-            if (confirm('Réinitialiser complètement ? Cela effacera toutes les données du match en cours.')) {
-                document.querySelectorAll('input[type="text"], input[type="number"], textarea, select').forEach(el => {
-                    if (el.type === 'number') el.value = 0;
-                    else el.value = '';
-                });
-                liveActions = [];
-                currentMatchId = '';
-                matchActive = false;
-                pauseTimer();
-                resetTimer();
-                document.getElementById('actionsList').innerHTML = '';
-                document.getElementById('matchInfo').textContent = 'Aucun match en cours';
-                showNotification('Tout a été réinitialisé.');
+                document.getElementById('matchStatus').classList.remove('closed');
             }
         }
 
-        // ==================== TIMER ====================
-        function startTimer() {
-            if (timerInterval) return;
-            timerInterval = setInterval(() => {
-                timerSeconds++;
-                updateTimerDisplay();
-            }, 1000);
+        function calculatePlayerStats() {
+            const team1 = document.getElementById('team1').value || 'Équipe 1';
+            const team2 = document.getElementById('team2').value || 'Équipe 2';
+
+            const team1Players = buildPlayerStats(team1);
+            const team2Players = buildPlayerStats(team2);
+
+            displayPlayerStats(team1, team1Players, 'team1PlayerBody');
+            displayPlayerStats(team2, team2Players, 'team2PlayerBody');
+
+            document.getElementById('team1Name').textContent = team1;
+            document.getElementById('team2Name').textContent = team2;
         }
 
-        function pauseTimer() {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
+        function buildPlayerStats(teamName) {
+            const players = {};
 
-        function resetTimer() {
-            pauseTimer();
-            timerSeconds = 0;
-            updateTimerDisplay();
-        }
+            liveActions.forEach(action => {
+                if (action.team !== teamName) return;
 
-        function updateTimerDisplay() {
-            const mins = Math.floor(timerSeconds / 60);
-            const secs = timerSeconds % 60;
-            document.getElementById('timerDisplay').textContent = 
-                String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
-        }
+                let dossard = null;
+                if (action.actionType === 'Changement') {
+                    if (action.playerOut) {
+                        if (!players[action.playerOut]) {
+                            players[action.playerOut] = { dossard: action.playerOut, buts: 0, fautes: 0, actionsClés: 0, erreurs: 0, entré: action.minute, sorti: null };
+                        }
+                        players[action.playerOut].sorti = action.minute;
+                    }
+                    if (action.playerIn) {
+                        if (!players[action.playerIn]) {
+                            players[action.playerIn] = { dossard: action.playerIn, buts: 0, fautes: 0, actionsClés: 0, erreurs: 0, entré: action.minute, sorti: null };
+                        }
+                    }
+                } else {
+                    dossard = action.player;
+                    if (dossard) {
+                        if (!players[dossard]) {
+                            players[dossard] = { dossard: dossard, buts: 0, fautes: 0, actionsClés: 0, erreurs: 0, entré: 0, sorti: null };
+                        }
 
-        function getCurrentMinute() {
-            return Math.floor(timerSeconds / 60);
-        }
-
-        // ==================== LIVE ACTIONS ====================
-        function quickAction(actionType) {
-            if (!matchActive) {
-                showNotification('Veuillez d\'abord créer un match.', 'error');
-                return;
-            }
-
-            const team = document.getElementById('actionTeam').value;
-            const minute = getCurrentMinute();
-
-            if (!team) {
-                showNotification('Veuillez sélectionner une équipe.', 'error');
-                return;
-            }
-
-            // Gestion spéciale pour les changements
-            if (actionType === 'Changement') {
-                const playerOut = document.getElementById('playerOut').value.trim();
-                const playerIn = document.getElementById('playerIn').value.trim();
-
-                if (!playerOut || !playerIn) {
-                    showNotification('Veuillez saisir les deux numéros de dossard (sortant et entrant).', 'error');
-                    return;
+                        switch (action.actionType) {
+                            case 'But':
+                                players[dossard].buts++;
+                                break;
+                            case 'Faute':
+                                players[dossard].fautes++;
+                                break;
+                            case 'Action Clé':
+                                players[dossard].actionsClés++;
+                                break;
+                            case 'Erreur':
+                                players[dossard].erreurs++;
+                                break;
+                        }
+                    }
                 }
+            });
 
-                const action = {
-                    matchId: currentMatchId,
-                    minute: minute,
-                    team: team,
-                    actionType: actionType,
-                    player: `${playerOut}→${playerIn}`,
-                    playerOut: playerOut,
-                    playerIn: playerIn,
-                    description: `#${playerOut} remplacé par #${playerIn}`,
-                    timestamp: new Date().getTime()
-                };
+            return Object.values(players).sort((a, b) => a.dossard - b.dossard);
+        }
 
-                liveActions.push(action);
+        function displayPlayerStats(teamName, players, elementId) {
+            const tbody = document.getElementById(elementId);
 
-                const payload = {
-                    type: 'action_live',
-                    matchId: currentMatchId,
-                    minute: minute,
-                    team: team,
-                    actionType: actionType,
-                    player: `Sortant: #${playerOut} | Entrant: #${playerIn}`,
-                    description: `Remplacement du #${playerOut} par le #${playerIn}`
-                };
-
-                sendToGoogleSheets(payload).then(() => {
-                    displayAction(action);
-                    document.getElementById('playerOut').value = '';
-                    document.getElementById('playerIn').value = '';
-                    document.getElementById('actionDescription').value = '';
-                    document.getElementById('substitutionSection').style.display = 'none';
-                });
+            if (players.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-secondary);">Aucun joueur enregistré</td></tr>';
                 return;
             }
 
-            // Actions normales (But, Faute, Action Clé, Erreur)
-            const player = document.getElementById('actionPlayer').value.trim();
-            const description = document.getElementById('actionDescription').value.trim();
+            tbody.innerHTML = players.map(player => {
+                const tempsJeu = player.sorti ? `${player.entré}'-${player.sorti}'` : (player.entré > 0 ? `${player.entré}'-` : '0-90');
+                return `
+                    <tr>
+                        <td class="dossard-cell">#${player.dossard}</td>
+                        <td>${player.buts}</td>
+                        <td>${player.fautes}</td>
+                        <td>${player.actionsClés}</td>
+                        <td>${player.erreurs}</td>
+                        <td>${tempsJeu}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ==================== ACTIONS ====================
+        function addAction(actionType) {
+            const team = document.getElementById('actionTeam').value;
+            const minute = parseInt(document.getElementById('actionMinute').value);
+
+            if (isNaN(minute) || minute < 0 || minute > 120) {
+                showNotification('Veuillez entrer une minute valide (0-120)', 'error');
+                return;
+            }
 
             const action = {
-                matchId: currentMatchId,
-                minute: minute,
+                timestamp: Date.now(),
                 team: team,
+                minute: minute,
                 actionType: actionType,
-                player: player,
-                description: description,
-                timestamp: new Date().getTime()
+                player: actionType !== 'Changement' ? prompt(`Numéro de dossard pour "${actionType}" :`) : null,
+                description: actionType !== 'Changement' ? document.getElementById('actionDescription').value : null,
+                playerOut: null,
+                playerIn: null
             };
+
+            if (action.player && isNaN(action.player)) {
+                showNotification('Le dossard doit être un nombre', 'error');
+                return;
+            }
 
             liveActions.push(action);
-
-            const payload = {
-                type: 'action_live',
-                matchId: currentMatchId,
-                minute: minute,
-                team: team,
-                actionType: actionType,
-                player: player,
-                description: description
-            };
-
-            sendToGoogleSheets(payload).then(() => {
-                displayAction(action);
-                document.getElementById('actionPlayer').value = '';
-                document.getElementById('actionDescription').value = '';
-            });
+            displayAction(action);
+            document.getElementById('actionMinute').value = '';
+            document.getElementById('actionDescription').value = '';
+            showNotification(`${actionType} enregistré !`, 'success');
         }
 
         function displayAction(action) {
             const list = document.getElementById('actionsList');
             const item = document.createElement('div');
             item.className = 'action-item';
-            
+
             let playerDisplay = '';
-            if (action.actionType === 'Changement') {
-                // Format spécial pour les changements
-                playerDisplay = `<span class="action-item-substitution">
-                    <span style="color: var(--danger);">#${action.playerOut}</span>
-                    <span style="color: var(--text-secondary); margin: 0 5px;">→</span>
-                    <span style="color: var(--success);">#${action.playerIn}</span>
-                </span>`;
-            } else {
-                // Format normal pour autres actions
-                playerDisplay = action.player ? `<span class="action-item-dossard">#${action.player}</span>` : '';
+            if (action.actionType === 'Changement' && action.playerOut && action.playerIn) {
+                playerDisplay = `<span class="action-item-dossard out">#${action.playerOut}</span> ➜ <span class="action-item-dossard in">#${action.playerIn}</span>`;
+            } else if (action.player) {
+                playerDisplay = `<span class="action-item-dossard">#${action.player}</span>`;
             }
-            
+
             item.innerHTML = `
                 <span class="action-item-time">${action.minute}'</span>
                 <span class="action-item-type">${action.actionType}</span>
@@ -1181,17 +1420,160 @@
             }
         }
 
+        function submitSubstitution() {
+            const team = document.getElementById('actionTeam').value;
+            const minute = parseInt(document.getElementById('actionMinute').value);
+            const playerOut = document.getElementById('playerOut').value.trim();
+            const playerIn = document.getElementById('playerIn').value.trim();
+
+            if (!playerOut || !playerIn) {
+                showNotification('Veuillez saisir les deux numéros de dossards', 'error');
+                return;
+            }
+
+            if (isNaN(minute) || minute < 0 || minute > 120) {
+                showNotification('Veuillez entrer une minute valide', 'error');
+                return;
+            }
+
+            const action = {
+                timestamp: Date.now(),
+                team: team,
+                minute: minute,
+                actionType: 'Changement',
+                player: `${playerOut}→${playerIn}`,
+                playerOut: playerOut,
+                playerIn: playerIn,
+                description: `#${playerOut} remplacé par #${playerIn}`
+            };
+
+            liveActions.push(action);
+            displayAction(action);
+
+            document.getElementById('actionMinute').value = '';
+            document.getElementById('playerOut').value = '';
+            document.getElementById('playerIn').value = '';
+            document.getElementById('substitutionSection').style.display = 'none';
+
+            showNotification('Changement enregistré !', 'success');
+        }
+
         function deleteAction(timestamp) {
             liveActions = liveActions.filter(a => a.timestamp !== timestamp);
             document.getElementById('actionsList').innerHTML = '';
             liveActions.forEach(displayAction);
+            showNotification('Action supprimée', 'success');
+        }
+
+        // ==================== MATCH COMPLETION ====================
+        function submitMatch() {
+            if (!matchInProgress) {
+                showNotification('Aucun match en cours', 'error');
+                return;
+            }
+
+            const team1 = document.getElementById('team1').value || 'Équipe 1';
+            const team2 = document.getElementById('team2').value || 'Équipe 2';
+
+            const team1Stats = {
+                buts: liveActions.filter(a => a.team === team1 && a.actionType === 'But').length,
+                fautes: liveActions.filter(a => a.team === team1 && a.actionType === 'Faute').length,
+                changements: liveActions.filter(a => a.team === team1 && a.actionType === 'Changement').length,
+                actionsClés: liveActions.filter(a => a.team === team1 && a.actionType === 'Action Clé').length,
+                erreurs: liveActions.filter(a => a.team === team1 && a.actionType === 'Erreur').length
+            };
+
+            const team2Stats = {
+                buts: liveActions.filter(a => a.team === team2 && a.actionType === 'But').length,
+                fautes: liveActions.filter(a => a.team === team2 && a.actionType === 'Faute').length,
+                changements: liveActions.filter(a => a.team === team2 && a.actionType === 'Changement').length,
+                actionsClés: liveActions.filter(a => a.team === team2 && a.actionType === 'Action Clé').length,
+                erreurs: liveActions.filter(a => a.team === team2 && a.actionType === 'Erreur').length
+            };
+
+            const matchId = `MATCH_${Date.now()}`;
+            const comments = document.getElementById('finalComments').value || '';
+
+            // Envoyer les bilans
+            const bilanTeam1 = {
+                type: 'bilan_match',
+                matchId: matchId,
+                team: team1,
+                totalButs: team1Stats.buts,
+                totalFautes: team1Stats.fautes,
+                totalChangements: team1Stats.changements,
+                actionsClés: team1Stats.actionsClés,
+                erreurs: team1Stats.erreurs,
+                notes: comments
+            };
+
+            const bilanTeam2 = {
+                type: 'bilan_match',
+                matchId: matchId,
+                team: team2,
+                totalButs: team2Stats.buts,
+                totalFautes: team2Stats.fautes,
+                totalChangements: team2Stats.changements,
+                actionsClés: team2Stats.actionsClés,
+                erreurs: team2Stats.erreurs,
+                notes: comments
+            };
+
+            // Envoyer les statistiques des joueurs
+            const team1Players = buildPlayerStats(team1);
+            const team2Players = buildPlayerStats(team2);
+
+            const playerStatsPayload = {
+                type: 'stats_joueurs',
+                matchId: matchId,
+                team1Players: team1Players,
+                team2Players: team2Players
+            };
+
+            // Envoyer tous les payloads
+            Promise.all([
+                sendToGoogleSheets(bilanTeam1),
+                sendToGoogleSheets(bilanTeam2),
+                sendToGoogleSheets(playerStatsPayload)
+            ]).then(() => {
+                showNotification('Match clôturé et données envoyées !', 'success');
+                matchInProgress = false;
+                document.getElementById('matchStatus').innerHTML = `
+                    <p><strong>Match terminé :</strong> ${team1} <strong>${team1Stats.buts}</strong> - <strong>${team2Stats.buts}</strong> ${team2}</p>
+                `;
+                document.getElementById('matchStatus').classList.add('closed');
+            }).catch(err => {
+                console.error('Erreur lors de l\'envoi:', err);
+                showNotification('Erreur lors de l\'envoi des données', 'error');
+            });
+        }
+
+        function resetMatch() {
+            if (confirm('Êtes-vous sûr de vouloir réinitialiser le match ? Toutes les données seront perdues.')) {
+                matchInProgress = false;
+                liveActions = [];
+                playersData = [
+                    { name: 'FC Lyon', titulaires: [], remplacants: [] },
+                    { name: 'AS Étienne', titulaires: [], remplacants: [] }
+                ];
+                document.getElementById('actionsList').innerHTML = '';
+                document.getElementById('team1').value = '';
+                document.getElementById('team2').value = '';
+                document.getElementById('actionMinute').value = '';
+                document.getElementById('finalComments').value = '';
+                document.getElementById('verificationSection').style.display = 'none';
+                currentPlayerTeamIndex = 0;
+                updatePlayerTeamDisplay();
+                switchTab('beforeMatch');
+                showNotification('Match réinitialisé', 'success');
+            }
         }
 
         // ==================== GOOGLE SHEETS SYNC ====================
         function sendToGoogleSheets(payload) {
             if (!WEB_APP_URL) {
-                showNotification('Veuillez d\'abord configurer l\'URL du Web App Google Apps Script.', 'error');
-                return Promise.reject('No URL configured');
+                console.log('URL non configurée, payload non envoyé:', payload);
+                return Promise.resolve();
             }
 
             return fetch(WEB_APP_URL, {
@@ -1220,7 +1602,10 @@
 
         // ==================== STATISTIQUES & CHARTS ====================
         function updateStatsDisplay() {
-            if (liveActions.length === 0) return;
+            if (liveActions.length === 0) {
+                document.getElementById('statsCards').innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Aucune donnée disponible</p>';
+                return;
+            }
 
             const team1 = document.getElementById('team1').value || 'Équipe 1';
             const team2 = document.getElementById('team2').value || 'Équipe 2';
@@ -1230,9 +1615,7 @@
                 totalFautes: liveActions.filter(a => a.actionType === 'Faute').length,
                 totalChangements: liveActions.filter(a => a.actionType === 'Changement').length,
                 actionsClés: liveActions.filter(a => a.actionType === 'Action Clé').length,
-                erreurs: liveActions.filter(a => a.actionType === 'Erreur').length,
-                team1Buts: liveActions.filter(a => a.actionType === 'But' && a.team === team1).length,
-                team2Buts: liveActions.filter(a => a.actionType === 'But' && a.team === team2).length
+                erreurs: liveActions.filter(a => a.actionType === 'Erreur').length
             };
 
             const statsHtml = `
@@ -1249,6 +1632,10 @@
                     <div class="stat-card-value">${stats.actionsClés}</div>
                 </div>
                 <div class="stat-card">
+                    <div class="stat-card-label">Changements</div>
+                    <div class="stat-card-value">${stats.totalChangements}</div>
+                </div>
+                <div class="stat-card">
                     <div class="stat-card-label">Erreurs</div>
                     <div class="stat-card-value">${stats.erreurs}</div>
                 </div>
@@ -1260,6 +1647,8 @@
 
         function updateCharts() {
             updateStatsDisplay();
+
+            if (liveActions.length === 0) return;
 
             const team1 = document.getElementById('team1').value || 'Équipe 1';
             const team2 = document.getElementById('team2').value || 'Équipe 2';

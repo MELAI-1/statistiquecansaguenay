@@ -1,4 +1,5 @@
-// Google Apps Script - À copier/coller dans Google Sheets (Extensions > Apps Script)
+// Google Apps Script - Checklist & Live Tagging Tool
+// À copier/coller dans Google Sheets (Extensions > Apps Script)
 
 function doPost(e) {
   try {
@@ -16,11 +17,14 @@ function doPost(e) {
       insertLiveAction(ss, payload);
     } else if (actionType === "bilan_match") {
       insertBilan(ss, payload);
+    } else if (actionType === "stats_joueurs") {
+      insertStatsJoueurs(ss, payload);
     }
     
     return ContentService.createTextOutput(JSON.stringify({
       status: "success",
-      timestamp: new Date()
+      timestamp: new Date(),
+      type: actionType
     })).setMimeType(ContentService.MimeType.JSON);
     
   } catch (error) {
@@ -32,7 +36,7 @@ function doPost(e) {
 }
 
 function initializeSheets(ss) {
-  const sheetNames = ["Matchs", "Actions_Live", "Bilans_Apres_Match"];
+  const sheetNames = ["Matchs", "Actions_Live", "Bilans_Apres_Match", "Stats_Joueurs"];
   
   sheetNames.forEach(name => {
     let sheet = ss.getSheetByName(name);
@@ -53,6 +57,10 @@ function initializeSheets(ss) {
         sheet.appendRow([
           "ID_Match", "Équipe", "Total_Buts", "Total_Fautes", 
           "Total_Changements", "Actions_Clés", "Erreurs", "Notes", "Créé_À"
+        ]);
+      } else if (name === "Stats_Joueurs") {
+        sheet.appendRow([
+          "ID_Match", "Équipe", "Dossard", "Buts", "Fautes", "Actions_Clés", "Erreurs", "Entré_À", "Sorti_À", "Créé_À"
         ]);
       }
     }
@@ -117,7 +125,65 @@ function insertBilan(ss, data) {
   ]);
 }
 
+function insertStatsJoueurs(ss, data) {
+  const sheet = ss.getSheetByName("Stats_Joueurs");
+  const matchId = data.matchId;
+  
+  // Traiter les joueurs de l'équipe 1
+  if (data.team1Players && Array.isArray(data.team1Players)) {
+    data.team1Players.forEach(player => {
+      sheet.appendRow([
+        matchId,
+        player.team || "Équipe 1",
+        player.dossard || "",
+        player.buts || 0,
+        player.fautes || 0,
+        player.actionsClés || 0,
+        player.erreurs || 0,
+        player.entré || 0,
+        player.sorti || "",
+        new Date()
+      ]);
+    });
+  }
+  
+  // Traiter les joueurs de l'équipe 2
+  if (data.team2Players && Array.isArray(data.team2Players)) {
+    data.team2Players.forEach(player => {
+      sheet.appendRow([
+        matchId,
+        player.team || "Équipe 2",
+        player.dossard || "",
+        player.buts || 0,
+        player.fautes || 0,
+        player.actionsClés || 0,
+        player.erreurs || 0,
+        player.entré || 0,
+        player.sorti || "",
+        new Date()
+      ]);
+    });
+  }
+}
+
 // Fonction utile pour tester le Web App URL
 function getWebAppUrl() {
   return ScriptApp.getService().getUrl();
+}
+
+// Fonction utile pour récupérer un résumé des données
+function getSummary() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  const matchSheet = ss.getSheetByName("Matchs");
+  const actionsSheet = ss.getSheetByName("Actions_Live");
+  const bilansSheet = ss.getSheetByName("Bilans_Apres_Match");
+  const statsSheet = ss.getSheetByName("Stats_Joueurs");
+  
+  return {
+    totalMatches: matchSheet ? matchSheet.getLastRow() - 1 : 0,
+    totalActions: actionsSheet ? actionsSheet.getLastRow() - 1 : 0,
+    totalBilans: bilansSheet ? bilansSheet.getLastRow() - 1 : 0,
+    totalPlayerStats: statsSheet ? statsSheet.getLastRow() - 1 : 0
+  };
 }
