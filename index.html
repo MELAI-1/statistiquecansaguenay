@@ -279,6 +279,167 @@
             color: white;
         }
 
+        /* Offline sync banner */
+        .sync-banner {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .sync-banner.show {
+            display: flex;
+        }
+
+        .sync-banner.offline {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--danger);
+            border-bottom: 2px solid var(--danger);
+        }
+
+        .sync-banner.pending {
+            background: rgba(243, 156, 18, 0.15);
+            color: var(--warning);
+            border-bottom: 2px solid var(--warning);
+        }
+
+        .sync-banner.synced {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+            border-bottom: 2px solid var(--success);
+        }
+
+        .sync-banner button {
+            padding: 5px 12px;
+            font-size: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: currentColor;
+        }
+
+        .sync-banner button span {
+            color: var(--bg-darker);
+            font-weight: bold;
+        }
+
+        /* Chrono */
+        .chrono-panel {
+            background: var(--surface-light);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chrono-display {
+            font-size: 56px;
+            font-weight: bold;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .chrono-display.running {
+            color: var(--success);
+        }
+
+        .chrono-display.paused {
+            color: var(--warning);
+        }
+
+        .chrono-period {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .chrono-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .chrono-controls .btn {
+            min-width: 130px;
+            justify-content: center;
+        }
+
+        .chrono-controls .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .chrono-periods {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .chrono-period-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--primary);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .chrono-period-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .minute-sync-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .minute-sync-row input {
+            flex: 1;
+        }
+
+        .minute-sync-row .btn {
+            padding: 10px 14px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .minute-auto-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 10px;
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+            border: 1px solid var(--success);
+            white-space: nowrap;
+        }
+
+        .minute-auto-badge.manual {
+            background: rgba(243, 156, 18, 0.15);
+            color: var(--warning);
+            border-color: var(--warning);
+        }
+
         /* Substitution Form */
         #substitutionSection {
             display: none;
@@ -688,6 +849,11 @@
         <div class="subtitle">Analyse Sportive en Temps Réel</div>
     </div>
 
+    <div class="sync-banner" id="syncBanner">
+        <span id="syncBannerText">🟢 En ligne</span>
+        <button id="syncBannerRetryBtn" onclick="flushQueue()" style="display:none;"><span>🔄 Réessayer maintenant</span></button>
+    </div>
+
     <div class="notification" id="notification"></div>
 
     <div class="config-zone">
@@ -816,7 +982,27 @@
     <!-- TAB 2: Pendant Match -->
     <div id="liveMatch" class="tab-content">
         <div class="section">
-            <h2>⏱️ Actions du Match en Direct</h2>
+            <h2>⏱️ Chronomètre du Match</h2>
+
+            <div class="chrono-panel">
+                <div class="chrono-display" id="chronoDisplay">00:00</div>
+                <div class="chrono-period" id="chronoPeriodLabel">Arrêté</div>
+                <div class="chrono-controls">
+                    <button class="btn btn-success" id="chronoStartBtn" onclick="startChrono()">▶️ Démarrer</button>
+                    <button class="btn btn-warning" id="chronoPauseBtn" onclick="pauseChrono()" disabled>⏸️ Pause</button>
+                    <button class="btn btn-danger" id="chronoResetBtn" onclick="resetChrono()">⏹️ Réinitialiser</button>
+                </div>
+                <div class="chrono-periods">
+                    <button class="chrono-period-btn active" id="periodBtn1" onclick="setChronoPeriod('1ère mi-temps')">1ère mi-temps</button>
+                    <button class="chrono-period-btn" id="periodBtn2" onclick="setChronoPeriod('Mi-temps')">Mi-temps</button>
+                    <button class="chrono-period-btn" id="periodBtn3" onclick="setChronoPeriod('2ème mi-temps')">2ème mi-temps</button>
+                    <button class="chrono-period-btn" id="periodBtn4" onclick="setChronoPeriod('Prolongation')">Prolongation</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Actions du Match en Direct</h2>
 
             <div class="form-group">
                 <label>Équipe</label>
@@ -828,7 +1014,11 @@
 
             <div class="form-group">
                 <label>Minute du Match</label>
-                <input type="number" id="actionMinute" min="0" max="120" placeholder="Minute">
+                <div class="minute-sync-row">
+                    <input type="number" id="actionMinute" min="0" max="150" placeholder="Minute" oninput="onMinuteManualEdit()">
+                    <span class="minute-auto-badge" id="minuteAutoBadge">🔗 Auto (chrono)</span>
+                    <button type="button" class="btn btn-primary" onclick="syncMinuteWithChrono()">🔄 Sync</button>
+                </div>
             </div>
 
             <div class="action-buttons">
@@ -862,7 +1052,10 @@
             </div>
 
             <div style="margin-top: 20px;">
-                <h3>📜 Journal des Actions</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <h3 style="margin: 0;">📜 Journal des Actions</h3>
+                    <button class="btn btn-warning" id="undoLastActionBtn" onclick="undoLastAction()">↩️ Annuler la dernière action</button>
+                </div>
                 <div class="actions-list" id="actionsList"></div>
             </div>
         </div>
@@ -982,6 +1175,19 @@
         let matchInProgress = false;
         let liveActions = [];
         let currentPlayerTeamIndex = 0;
+        let currentMatchId = null;
+
+        // File d'attente hors ligne
+        let offlineQueue = [];
+        let flushInProgress = false;
+
+        // Chrono state
+        let chronoElapsedMs = 0;      // temps accumulé (hors période en cours)
+        let chronoRunning = false;
+        let chronoStartedAt = null;   // timestamp Date.now() du dernier "démarrer"
+        let chronoIntervalId = null;
+        let chronoPeriod = '1ère mi-temps';
+        let minuteManualOverride = false; // true si l'utilisateur a modifié la minute à la main
         let playersData = [
             { name: 'FC Lyon', titulaires: [], remplacants: [] },
             { name: 'AS Étienne', titulaires: [], remplacants: [] }
@@ -994,6 +1200,11 @@
         // ==================== INITIALIZATION ====================
         document.getElementById('matchDate').valueAsDate = new Date();
         updatePlayerTeamDisplay();
+        restoreChronoState();
+        restoreOfflineQueue();
+        window.addEventListener('online', () => { updateSyncBanner(); flushQueue(); });
+        window.addEventListener('offline', () => { updateSyncBanner(); });
+        setInterval(() => { if (navigator.onLine) flushQueue(); }, 20000);
 
         // ==================== GESTION DES JOUEURS ====================
         function switchPlayerTeam() {
@@ -1181,6 +1392,177 @@
                 WEB_APP_URL = url;
                 localStorage.setItem('webAppUrl', url);
                 showNotification('URL sauvegardée !', 'success');
+                updateSyncBanner();
+                if (navigator.onLine) flushQueue();
+            }
+        }
+
+        // ==================== CHRONOMÈTRE ====================
+        function getChronoElapsedMs() {
+            if (chronoRunning && chronoStartedAt) {
+                return chronoElapsedMs + (Date.now() - chronoStartedAt);
+            }
+            return chronoElapsedMs;
+        }
+
+        function formatChrono(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const mm = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+            const ss = (totalSeconds % 60).toString().padStart(2, '0');
+            return `${mm}:${ss}`;
+        }
+
+        function saveChronoState() {
+            localStorage.setItem('chronoState', JSON.stringify({
+                chronoElapsedMs,
+                chronoRunning,
+                chronoStartedAt,
+                chronoPeriod
+            }));
+        }
+
+        function restoreChronoState() {
+            const saved = localStorage.getItem('chronoState');
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    chronoElapsedMs = state.chronoElapsedMs || 0;
+                    chronoPeriod = state.chronoPeriod || '1ère mi-temps';
+                    if (state.chronoRunning && state.chronoStartedAt) {
+                        chronoStartedAt = state.chronoStartedAt;
+                        chronoRunning = true;
+                        runChronoInterval();
+                    }
+                } catch (e) { /* ignore */ }
+            }
+            updateChronoDisplay();
+            updateChronoButtons();
+            updatePeriodButtons();
+            updateMinuteBadge();
+            syncMinuteIfAuto();
+        }
+
+        function runChronoInterval() {
+            if (chronoIntervalId) clearInterval(chronoIntervalId);
+            chronoIntervalId = setInterval(() => {
+                updateChronoDisplay();
+                syncMinuteIfAuto();
+            }, 1000);
+        }
+
+        function startChrono() {
+            if (chronoRunning) return;
+            chronoRunning = true;
+            chronoStartedAt = Date.now();
+            runChronoInterval();
+            updateChronoDisplay();
+            updateChronoButtons();
+            saveChronoState();
+            showNotification('Chronomètre démarré ▶️', 'success');
+        }
+
+        function pauseChrono() {
+            if (!chronoRunning) return;
+            chronoElapsedMs = getChronoElapsedMs();
+            chronoRunning = false;
+            chronoStartedAt = null;
+            if (chronoIntervalId) {
+                clearInterval(chronoIntervalId);
+                chronoIntervalId = null;
+            }
+            updateChronoDisplay();
+            updateChronoButtons();
+            saveChronoState();
+            showNotification('Chronomètre en pause ⏸️', 'success');
+        }
+
+        function resetChrono() {
+            if (!confirm('Réinitialiser le chronomètre à 00:00 ?')) return;
+            if (chronoIntervalId) {
+                clearInterval(chronoIntervalId);
+                chronoIntervalId = null;
+            }
+            chronoElapsedMs = 0;
+            chronoRunning = false;
+            chronoStartedAt = null;
+            chronoPeriod = '1ère mi-temps';
+            minuteManualOverride = false;
+            updateChronoDisplay();
+            updateChronoButtons();
+            updatePeriodButtons();
+            saveChronoState();
+            syncMinuteWithChrono();
+            showNotification('Chronomètre réinitialisé ⏹️', 'success');
+        }
+
+        function updateChronoDisplay() {
+            const display = document.getElementById('chronoDisplay');
+            const label = document.getElementById('chronoPeriodLabel');
+            if (!display) return;
+            display.textContent = formatChrono(getChronoElapsedMs());
+            display.classList.remove('running', 'paused');
+            display.classList.add(chronoRunning ? 'running' : 'paused');
+            label.textContent = chronoRunning ? `⏱️ En cours — ${chronoPeriod}` : `⏸️ Arrêté — ${chronoPeriod}`;
+        }
+
+        function updateChronoButtons() {
+            document.getElementById('chronoStartBtn').disabled = chronoRunning;
+            document.getElementById('chronoPauseBtn').disabled = !chronoRunning;
+        }
+
+        function setChronoPeriod(period) {
+            chronoPeriod = period;
+            updateChronoDisplay();
+            updatePeriodButtons();
+            saveChronoState();
+        }
+
+        function updatePeriodButtons() {
+            const map = {
+                "1ère mi-temps": 'periodBtn1',
+                "Mi-temps": 'periodBtn2',
+                "2ème mi-temps": 'periodBtn3',
+                "Prolongation": 'periodBtn4'
+            };
+            Object.values(map).forEach(id => document.getElementById(id).classList.remove('active'));
+            if (map[chronoPeriod]) {
+                document.getElementById(map[chronoPeriod]).classList.add('active');
+            }
+        }
+
+        // ---- Synchronisation avec le champ "Minute du Match" ----
+        function currentChronoMinute() {
+            return Math.floor(getChronoElapsedMs() / 60000);
+        }
+
+        function syncMinuteIfAuto() {
+            if (minuteManualOverride) return;
+            const field = document.getElementById('actionMinute');
+            if (field) field.value = currentChronoMinute();
+        }
+
+        function syncMinuteWithChrono() {
+            minuteManualOverride = false;
+            const field = document.getElementById('actionMinute');
+            if (field) field.value = currentChronoMinute();
+            updateMinuteBadge();
+            showNotification('Minute synchronisée avec le chrono', 'success');
+        }
+
+        function onMinuteManualEdit() {
+            minuteManualOverride = true;
+            updateMinuteBadge();
+        }
+
+        function updateMinuteBadge() {
+            const badge = document.getElementById('minuteAutoBadge');
+            if (!badge) return;
+            if (minuteManualOverride) {
+                badge.textContent = '✋ Manuel';
+                badge.classList.add('manual');
+            } else {
+                badge.textContent = '🔗 Auto (chrono)';
+                badge.classList.remove('manual');
             }
         }
 
@@ -1214,13 +1596,30 @@
 
             matchInProgress = true;
             liveActions = [];
+            currentMatchId = `MATCH_${Date.now()}`;
             document.getElementById('actionsList').innerHTML = '';
             document.getElementById('actionTeam').innerHTML = `
                 <option value="${team1}">${team1}</option>
                 <option value="${team2}">${team2}</option>
             `;
 
+            sendToGoogleSheets({
+                type: 'match_create',
+                matchId: currentMatchId,
+                team1: team1,
+                team2: team2,
+                comments: ''
+            }, `match_${currentMatchId}`);
+
             switchTab('liveMatch');
+
+            // Démarrage automatique du chronomètre
+            chronoElapsedMs = 0;
+            chronoPeriod = '1ère mi-temps';
+            minuteManualOverride = false;
+            startChrono();
+            updatePeriodButtons();
+
             showNotification(`Match démarré ! (${team1Total} joueurs par équipe)`, 'success');
         }
 
@@ -1382,8 +1781,20 @@
                 return;
             }
 
+            action.queueId = `action_${action.timestamp}`;
             liveActions.push(action);
             displayAction(action);
+
+            sendToGoogleSheets({
+                type: 'action_live',
+                matchId: currentMatchId,
+                minute: action.minute,
+                team: action.team,
+                actionType: action.actionType,
+                player: action.player,
+                description: action.description
+            }, action.queueId);
+
             document.getElementById('actionMinute').value = '';
             document.getElementById('actionDescription').value = '';
             showNotification(`${actionType} enregistré !`, 'success');
@@ -1447,8 +1858,19 @@
                 description: `#${playerOut} remplacé par #${playerIn}`
             };
 
+            action.queueId = `action_${action.timestamp}`;
             liveActions.push(action);
             displayAction(action);
+
+            sendToGoogleSheets({
+                type: 'action_live',
+                matchId: currentMatchId,
+                minute: action.minute,
+                team: action.team,
+                actionType: action.actionType,
+                player: `Sortant: #${playerOut} | Entrant: #${playerIn}`,
+                description: action.description
+            }, action.queueId);
 
             document.getElementById('actionMinute').value = '';
             document.getElementById('playerOut').value = '';
@@ -1459,10 +1881,34 @@
         }
 
         function deleteAction(timestamp) {
+            const action = liveActions.find(a => a.timestamp === timestamp);
             liveActions = liveActions.filter(a => a.timestamp !== timestamp);
             document.getElementById('actionsList').innerHTML = '';
             liveActions.forEach(displayAction);
-            showNotification('Action supprimée', 'success');
+
+            if (action && action.queueId) {
+                const wasPending = offlineQueue.some(item => item.id === action.queueId);
+                removeFromQueue(action.queueId);
+                if (wasPending) {
+                    showNotification('Action supprimée (elle n\'avait pas encore été envoyée)', 'success');
+                    return;
+                }
+            }
+            showNotification('Action supprimée localement (si elle était déjà synchronisée, pensez à retirer la ligne dans Google Sheets)', 'success');
+        }
+
+        function undoLastAction() {
+            if (liveActions.length === 0) {
+                showNotification('Aucune action à annuler', 'error');
+                return;
+            }
+            const last = liveActions[liveActions.length - 1];
+            const label = last.actionType === 'Changement'
+                ? `Changement ${last.team} #${last.playerOut}→#${last.playerIn} (${last.minute}')`
+                : `${last.actionType} ${last.team} (${last.minute}')`;
+
+            if (!confirm(`Annuler la dernière action : ${label} ?`)) return;
+            deleteAction(last.timestamp);
         }
 
         // ==================== MATCH COMPLETION ====================
@@ -1491,7 +1937,7 @@
                 erreurs: liveActions.filter(a => a.team === team2 && a.actionType === 'Erreur').length
             };
 
-            const matchId = `MATCH_${Date.now()}`;
+            const matchId = currentMatchId || `MATCH_${Date.now()}`;
             const comments = document.getElementById('finalComments').value || '';
 
             // Envoyer les bilans
@@ -1535,8 +1981,13 @@
                 sendToGoogleSheets(bilanTeam1),
                 sendToGoogleSheets(bilanTeam2),
                 sendToGoogleSheets(playerStatsPayload)
-            ]).then(() => {
-                showNotification('Match clôturé et données envoyées !', 'success');
+            ]).then((results) => {
+                const allSent = results.every(r => r && r.sent);
+                if (allSent) {
+                    showNotification('Match clôturé et données envoyées !', 'success');
+                } else {
+                    showNotification('Match clôturé — certaines données sont en attente (mode hors ligne) 📥', 'success');
+                }
                 matchInProgress = false;
                 document.getElementById('matchStatus').innerHTML = `
                     <p><strong>Match terminé :</strong> ${team1} <strong>${team1Stats.buts}</strong> - <strong>${team2Stats.buts}</strong> ${team2}</p>
@@ -1552,6 +2003,7 @@
             if (confirm('Êtes-vous sûr de vouloir réinitialiser le match ? Toutes les données seront perdues.')) {
                 matchInProgress = false;
                 liveActions = [];
+                currentMatchId = null;
                 playersData = [
                     { name: 'FC Lyon', titulaires: [], remplacants: [] },
                     { name: 'AS Étienne', titulaires: [], remplacants: [] }
@@ -1564,16 +2016,40 @@
                 document.getElementById('verificationSection').style.display = 'none';
                 currentPlayerTeamIndex = 0;
                 updatePlayerTeamDisplay();
+
+                // Réinitialisation du chronomètre
+                if (chronoIntervalId) {
+                    clearInterval(chronoIntervalId);
+                    chronoIntervalId = null;
+                }
+                chronoElapsedMs = 0;
+                chronoRunning = false;
+                chronoStartedAt = null;
+                chronoPeriod = '1ère mi-temps';
+                minuteManualOverride = false;
+                localStorage.removeItem('chronoState');
+                updateChronoDisplay();
+                updateChronoButtons();
+                updatePeriodButtons();
+                updateMinuteBadge();
+
                 switchTab('beforeMatch');
                 showNotification('Match réinitialisé', 'success');
             }
         }
 
-        // ==================== GOOGLE SHEETS SYNC ====================
-        function sendToGoogleSheets(payload) {
+        // ==================== GOOGLE SHEETS SYNC (avec mode hors ligne) ====================
+        function sendToGoogleSheets(payload, queueId = null) {
+            const id = queueId || `q_${payload.type}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
             if (!WEB_APP_URL) {
                 console.log('URL non configurée, payload non envoyé:', payload);
-                return Promise.resolve();
+                return Promise.resolve({ sent: false, reason: 'no-url' });
+            }
+
+            if (!navigator.onLine) {
+                queuePayload(payload, id);
+                return Promise.resolve({ sent: false, reason: 'offline', id });
             }
 
             return fetch(WEB_APP_URL, {
@@ -1583,10 +2059,121 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload)
+            }).then(() => {
+                removeFromQueue(id);
+                updateSyncBanner();
+                return { sent: true, id };
             }).catch(err => {
-                console.log('Envoi effectué (no-cors mode)', payload);
-                return Promise.resolve();
+                queuePayload(payload, id);
+                return { sent: false, reason: 'network-error', id };
             });
+        }
+
+        // ---- Gestion de la file d'attente hors ligne ----
+        function restoreOfflineQueue() {
+            try {
+                offlineQueue = JSON.parse(localStorage.getItem('offlineQueue') || '[]');
+            } catch (e) {
+                offlineQueue = [];
+            }
+            updateSyncBanner();
+            if (navigator.onLine && offlineQueue.length > 0) {
+                flushQueue();
+            }
+        }
+
+        function saveOfflineQueue() {
+            localStorage.setItem('offlineQueue', JSON.stringify(offlineQueue));
+        }
+
+        function queuePayload(payload, id) {
+            const idx = offlineQueue.findIndex(item => item.id === id);
+            if (idx === -1) {
+                offlineQueue.push({ id, payload, addedAt: Date.now() });
+            } else {
+                offlineQueue[idx].payload = payload;
+            }
+            saveOfflineQueue();
+            updateSyncBanner();
+        }
+
+        function removeFromQueue(id) {
+            const before = offlineQueue.length;
+            offlineQueue = offlineQueue.filter(item => item.id !== id);
+            if (offlineQueue.length !== before) {
+                saveOfflineQueue();
+                updateSyncBanner();
+            }
+        }
+
+        function flushQueue() {
+            if (flushInProgress) return;
+            if (!WEB_APP_URL) return;
+            if (!navigator.onLine) { updateSyncBanner(); return; }
+            if (offlineQueue.length === 0) { updateSyncBanner(); return; }
+
+            flushInProgress = true;
+            const queueSnapshot = [...offlineQueue];
+            let chain = Promise.resolve();
+
+            queueSnapshot.forEach(item => {
+                chain = chain.then(() =>
+                    fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(item.payload)
+                    }).then(() => {
+                        removeFromQueue(item.id);
+                    }).catch(() => {
+                        // On s'arrête au premier échec : probablement toujours hors ligne
+                        return Promise.reject();
+                    })
+                );
+            });
+
+            chain.then(() => {
+                flushInProgress = false;
+                updateSyncBanner();
+                if (queueSnapshot.length > 0 && offlineQueue.length === 0) {
+                    showNotification(`${queueSnapshot.length} action(s) synchronisée(s) avec Google Sheets ☁️`, 'success');
+                }
+            }).catch(() => {
+                flushInProgress = false;
+                updateSyncBanner();
+            });
+        }
+
+        function updateSyncBanner() {
+            const banner = document.getElementById('syncBanner');
+            const text = document.getElementById('syncBannerText');
+            const retryBtn = document.getElementById('syncBannerRetryBtn');
+            if (!banner) return;
+
+            banner.classList.remove('offline', 'pending', 'synced');
+
+            if (!navigator.onLine) {
+                banner.classList.add('show', 'offline');
+                text.textContent = offlineQueue.length > 0
+                    ? `🔴 Hors ligne — ${offlineQueue.length} action(s) en file d'attente`
+                    : '🔴 Hors ligne';
+                retryBtn.style.display = 'none';
+            } else if (offlineQueue.length > 0) {
+                banner.classList.add('show', 'pending');
+                text.textContent = `🟠 ${offlineQueue.length} action(s) en attente de synchronisation`;
+                retryBtn.style.display = 'inline-block';
+            } else if (WEB_APP_URL) {
+                banner.classList.add('show', 'synced');
+                text.textContent = '🟢 En ligne — synchronisé avec Google Sheets';
+                retryBtn.style.display = 'none';
+                setTimeout(() => {
+                    if (offlineQueue.length === 0 && navigator.onLine) {
+                        banner.classList.remove('show');
+                    }
+                }, 3000);
+            } else {
+                banner.classList.remove('show');
+            }
         }
 
         // ==================== NOTIFICATIONS ====================
